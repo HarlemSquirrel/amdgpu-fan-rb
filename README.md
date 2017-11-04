@@ -1,6 +1,6 @@
 # amdgpu-fan-rb
 
-A Simple Ruby CLI to read and set the fan speed for AMD Radeon graphics cards running on the AMDGPU Linux driver.
+A Ruby CLI to read and set the fan speed for AMD Radeon graphics cards running on the AMDGPU Linux driver.
 
 ## Usage
 
