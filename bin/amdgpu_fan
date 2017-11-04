@@ -1,0 +1,5 @@
+#!/usr/bin/ruby
+
+require_relative '../lib/amdgpu_fan_cli'
+
+AmdgpuFanCli.start ARGV
