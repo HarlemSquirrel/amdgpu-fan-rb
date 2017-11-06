@@ -1,16 +1,22 @@
+# frozen_string_literal: true
+
 require 'thor'
 
+# The main class
 class AmdgpuFanCli < Thor
-  desc "set PERCENTAGE", "set fan speed to PERCENTAGE"
+  FAN_POWER_FILE = '/sys/class/drm/card0/device/hwmon/hwmon2/pwm1'
+
+  desc 'set PERCENTAGE', 'set fan speed to PERCENTAGE'
   def set(percentage)
-    return unless (0..100).include?(percentage.to_i)
+    return unless (0..100).cover?(percentage.to_i)
     puts "Setting fan to #{setting_from_percent percentage}/#{max}..."
-    `sudo su -c "echo #{setting_from_percent percentage} > /sys/class/drm/card0/device/hwmon/hwmon2/pwm1"`
+    `sudo su -c "echo #{setting_from_percent percentage} > #{FAN_POWER_FILE}"`
   end
 
   desc 'status', 'report the current status'
   def status
-    puts device_info, "GPU fan running at #{current_percentage.round}% ~ #{rpm} rpm"
+    puts device_info,
+         "GPU fan running at #{current_percentage.round}% ~ #{rpm} rpm"
   end
 
   private
@@ -20,7 +26,7 @@ class AmdgpuFanCli < Thor
   end
 
   def current
-    `cat /sys/class/drm/card0/device/hwmon/hwmon2/pwm1`
+    `cat #{FAN_POWER_FILE}`
   end
 
   def current_percentage
