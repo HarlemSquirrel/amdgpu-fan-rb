@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
   s.description = 'A CLI for amdgpu fans'
   s.authors     = ['Kevin McCormack']
   s.email       = 'harlemsquirrel@gmail.com'
-  s.files       = ['lib/amdgpu_fan_cli.rb']
+  s.executables << 'amdgpu_fan'
+  s.files       = Dir['bin/*'] + Dir['lib/**/*'] + Dir['README.md']
   s.homepage    =
     'https://github.com/HarlemSquirrel/amdgpu-fan-rb'
   s.license     = 'MIT'
