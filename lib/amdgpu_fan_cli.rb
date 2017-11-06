@@ -10,10 +10,14 @@ class AmdgpuFanCli < Thor
 
   desc 'status', 'report the current status'
   def status
-    puts "GPU fan running at #{current_percentage.round}%"
+    puts device_info, "GPU fan running at #{current_percentage.round}% ~ #{rpm} rpm"
   end
 
   private
+
+  def device_info
+    @device_info ||= `glxinfo | grep -m 1 -o "AMD Radeon .* Series"`.strip
+  end
 
   def current
     `cat /sys/class/drm/card0/device/hwmon/hwmon2/pwm1`
@@ -24,7 +28,11 @@ class AmdgpuFanCli < Thor
   end
 
   def max
-    @max ||= `cat /sys/class/drm/card0/device/hwmon/hwmon2/pwm1_max`
+    @max ||= `cat /sys/class/drm/card0/device/hwmon/hwmon2/pwm1_max`.to_i
+  end
+
+  def rpm
+    `cat /sys/class/drm/card0/device/hwmon/hwmon2/fan1_input`.strip
   end
 
   def setting_from_percent(percent)
