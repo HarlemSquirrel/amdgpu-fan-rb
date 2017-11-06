@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'amdgpu_fan'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2017-11-05'
   s.summary     =
     'A CLI to view and set fan speeds for AMD graphics cards running on the '\
