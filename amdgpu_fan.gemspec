@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Kevin McCormack']
   s.email       = 'harlemsquirrel@gmail.com'
   s.executables << 'amdgpu_fan'
-  s.files       = Dir['bin/*'] + Dir['lib/**/*'] + Dir['README.md']
+  s.files       = Dir['bin/*', 'lib/**/*', 'README.md']
   s.homepage    =
     'https://github.com/HarlemSquirrel/amdgpu-fan-rb'
   s.license     = 'MIT'
