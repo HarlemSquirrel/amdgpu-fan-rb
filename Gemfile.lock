@@ -7,7 +7,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  thor
+  thor (~> 0.20)
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
