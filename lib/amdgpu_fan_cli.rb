@@ -4,7 +4,9 @@ require 'thor'
 
 # The main class
 class AmdgpuFanCli < Thor
-  FAN_POWER_FILE = '/sys/class/drm/card0/device/hwmon/hwmon2/pwm1'
+  FAN_POWER_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1").first
+  FAN_MAX_POWER_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_max").first
+  FAN_INPUT_FILE = Dir.glob("/sys/class/drm/card0/device/**/fan1_input").first
 
   desc 'set PERCENTAGE', 'set fan speed to PERCENTAGE'
   def set(percentage)
@@ -26,7 +28,7 @@ class AmdgpuFanCli < Thor
   end
 
   def current
-    `cat #{FAN_POWER_FILE}`
+    File.read FAN_POWER_FILE
   end
 
   def current_percentage
@@ -34,11 +36,11 @@ class AmdgpuFanCli < Thor
   end
 
   def max
-    @max ||= `cat /sys/class/drm/card0/device/hwmon/hwmon2/pwm1_max`.to_i
+    @max ||= File.read(FAN_MAX_POWER_FILE).to_i
   end
 
   def rpm
-    `cat /sys/class/drm/card0/device/hwmon/hwmon2/fan1_input`.strip
+    File.read(FAN_INPUT_FILE).strip
   end
 
   def setting_from_percent(percent)
