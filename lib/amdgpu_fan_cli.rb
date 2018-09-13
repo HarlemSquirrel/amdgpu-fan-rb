@@ -7,6 +7,13 @@ class AmdgpuFanCli < Thor
   FAN_POWER_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1").first
   FAN_MAX_POWER_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_max").first
   FAN_INPUT_FILE = Dir.glob("/sys/class/drm/card0/device/**/fan1_input").first
+  FAN_MODE_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_enable").first
+
+  desc 'auto', 'set mode to automatic'
+  def auto
+    puts "Setting fan mode to automatic..."
+    `sudo su -c "echo 2 > #{FAN_MODE_FILE}"`
+  end
 
   desc 'set PERCENTAGE', 'set fan speed to PERCENTAGE'
   def set(percentage)
@@ -18,7 +25,7 @@ class AmdgpuFanCli < Thor
   desc 'status', 'report the current status'
   def status
     puts device_info,
-         "GPU fan running at #{current_percentage.round}% ~ #{rpm} rpm"
+         "GPU fan in #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm"
   end
 
   private
@@ -29,6 +36,17 @@ class AmdgpuFanCli < Thor
 
   def current
     File.read FAN_POWER_FILE
+  end
+
+  def current_mode
+    case File.read(FAN_MODE_FILE).strip
+    when '1'
+      'manual'
+    when '2'
+      'auto'
+    else
+      'unknown'
+    end
   end
 
   def current_percentage
