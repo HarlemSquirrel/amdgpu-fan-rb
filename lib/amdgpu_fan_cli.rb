@@ -30,7 +30,7 @@ class AmdgpuFanCli < Thor
     puts device_info,
          "Video BIOS version: #{VBIOS_VERSION}",
          "GPU fan in #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
-         "GPU temperature is #{current_temperature} °C"
+         "GPU temperature is #{current_temperature}°C"
   end
 
   private
