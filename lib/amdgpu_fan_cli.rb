@@ -8,18 +8,19 @@ class AmdgpuFanCli < Thor
   FAN_MAX_POWER_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_max").first
   FAN_INPUT_FILE = Dir.glob("/sys/class/drm/card0/device/**/fan1_input").first
   FAN_MODE_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_enable").first
+  FAN_MODES = { auto: '2', manual: '1' }.freeze
 
-  desc 'auto', 'set mode to automatic'
+  desc 'auto', 'set mode to automatic (requires sudo)'
   def auto
-    puts "Setting fan mode to automatic..."
-    `sudo su -c "echo 2 > #{FAN_MODE_FILE}"`
+    set_mode(:auto)
   end
 
-  desc 'set PERCENTAGE', 'set fan speed to PERCENTAGE'
+  desc 'set PERCENTAGE', 'set fan speed to PERCENTAGE (requires sudo)'
   def set(percentage)
-    return unless (0..100).cover?(percentage.to_i)
+    return puts "Invalid percentage" unless (0..100).cover?(percentage.to_i)
+    set_mode(:manual) unless in_manual_mode?
     puts "Setting fan to #{setting_from_percent percentage}/#{max}..."
-    `sudo su -c "echo #{setting_from_percent percentage} > #{FAN_POWER_FILE}"`
+    set_manual_speed setting_from_percent(percentage)
   end
 
   desc 'status', 'report the current status'
@@ -57,8 +58,25 @@ class AmdgpuFanCli < Thor
     @max ||= File.read(FAN_MAX_POWER_FILE).to_i
   end
 
+  def in_auto_mode?
+    File.read(FAN_MODE_FILE).strip == '2'
+  end
+
+  def in_manual_mode?
+    File.read(FAN_MODE_FILE).strip == '1'
+  end
+
   def rpm
     File.read(FAN_INPUT_FILE).strip
+  end
+
+  def set_mode(mode)
+    puts "Setting mode to #{mode}"
+    `echo "#{FAN_MODES[mode]}" | sudo tee #{FAN_MODE_FILE}`
+  end
+
+  def set_manual_speed(speed)
+    `echo "#{speed}" | sudo tee #{FAN_POWER_FILE}`
   end
 
   def setting_from_percent(percent)
