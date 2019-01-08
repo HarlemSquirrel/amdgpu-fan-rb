@@ -29,8 +29,8 @@ class AmdgpuFanCli < Thor
 
   desc 'status', 'View device info, current fan speed, and temperature'
   def status
-    puts device_info,
-         "Video BIOS version: #{VBIOS_VERSION}",
+    puts "📺\tGPU:   #{device_info}",
+         "📄\tvBIOS: #{VBIOS_VERSION}",
          "🌀\tFan:   #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
          "🌡\tTemp:  #{current_temperature}°C",
          "⚡\tPower: #{current_power} / #{power_max} Watts"

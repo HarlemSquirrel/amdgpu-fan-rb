@@ -15,9 +15,9 @@ Commands:
   amdgpu_fan status          # report the current status
 
 ➤  bin/amdgpu_fan status
-AMD Radeon (TM) R9 Fury Series
-Video BIOS version: 113-C8800100-102
-🌀	Fan:   auto mode running at 27% ~ 1832 rpm
-🌡	Temp:  32.0°C
-⚡	Power: 49.24 / 300.0 Watts
+📺	GPU:   AMD Radeon (TM) R9 Fury Series
+📄	vBIOS: 113-C8800100-102
+🌀	Fan:   auto mode running at 48% ~ 1828 rpm
+🌡	Temp:  28.0°C
+⚡	Power: 19.26 / 300.0 Watts
 ```
