@@ -9,13 +9,15 @@ class AmdgpuFanCli < Thor
   FAN_INPUT_FILE = Dir.glob("/sys/class/drm/card0/device/**/fan1_input").first
   FAN_MODE_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_enable").first
   FAN_MODES = { auto: '2', manual: '1' }.freeze
+  TEMPERATURE_FILE = Dir.glob("/sys/class/drm/card0/device/**/temp1_input").first
+  VBIOS_VERSION = File.read('/sys/class/drm/card0/device/vbios_version')
 
-  desc 'auto', 'set mode to automatic (requires sudo)'
+  desc 'auto', 'Set mode to automatic (requires sudo)'
   def auto
     set_mode(:auto)
   end
 
-  desc 'set PERCENTAGE', 'set fan speed to PERCENTAGE (requires sudo)'
+  desc 'set PERCENTAGE', 'Set fan speed to PERCENTAGE (requires sudo)'
   def set(percentage)
     return puts "Invalid percentage" unless (0..100).cover?(percentage.to_i)
     set_mode(:manual) unless in_manual_mode?
@@ -23,10 +25,12 @@ class AmdgpuFanCli < Thor
     set_manual_speed setting_from_percent(percentage)
   end
 
-  desc 'status', 'report the current status'
+  desc 'status', 'View device info, current fan speed, and temperature'
   def status
     puts device_info,
-         "GPU fan in #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm"
+         "Video BIOS version: #{VBIOS_VERSION}",
+         "GPU fan in #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
+         "GPU temperature is #{current_temperature} °C"
   end
 
   private
@@ -52,6 +56,10 @@ class AmdgpuFanCli < Thor
 
   def current_percentage
     current.to_f / max.to_i * 100
+  end
+
+  def current_temperature
+    (File.read(TEMPERATURE_FILE).to_f / 1000).round(1)
   end
 
   def max
