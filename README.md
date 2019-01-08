@@ -7,12 +7,13 @@ See https://wiki.archlinux.org/index.php/Fan_speed_control#AMDGPU_sysfs_fan_cont
 ## Usage
 
 ```
-➤  bin/amdgpu_fan
+➤  bin/amdgpu_fan help
 Commands:
-  amdgpu_fan auto            # set mode to automatic (requires sudo)
-  amdgpu_fan help [COMMAND]  # Describe available commands or one specific command
-  amdgpu_fan set PERCENTAGE  # set fan speed to PERCENTAGE (requires sudo)
-  amdgpu_fan status          # report the current status
+  amdgpu_fan auto             # Set mode to automatic (requires sudo)
+  amdgpu_fan help [COMMAND]   # Describe available commands or one specific command
+  amdgpu_fan set PERCENTAGE   # Set fan speed to PERCENTAGE (requires sudo)
+  amdgpu_fan status           # View device info, current fan speed, and temperature
+  amdgpu_fan watch [SECONDS]  # Watch current fan speed, and temperature refreshed every n seconds
 
 ➤  bin/amdgpu_fan status
 📺	GPU:   AMD Radeon (TM) R9 Fury Series
