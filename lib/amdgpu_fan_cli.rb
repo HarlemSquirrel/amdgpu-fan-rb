@@ -22,6 +22,7 @@ class AmdgpuFanCli < Thor
   desc 'set PERCENTAGE', 'Set fan speed to PERCENTAGE (requires sudo)'
   def set(percentage)
     return puts "Invalid percentage" unless (0..100).cover?(percentage.to_i)
+
     set_mode(:manual) unless in_manual_mode?
     puts "Setting fan to #{setting_from_percent percentage}/#{max}..."
     set_manual_speed setting_from_percent(percentage)
@@ -34,6 +35,27 @@ class AmdgpuFanCli < Thor
          "🌀\tFan:   #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
          "🌡\tTemp:  #{current_temperature}°C",
          "⚡\tPower: #{current_power} / #{power_max} Watts"
+  end
+
+  desc 'watch [SECONDS]', 'Watch fan speed, power, and temperature refreshed every n seconds'
+  def watch(seconds=1)
+    return puts "Seconds must be from 1 to 600" unless (1..600).cover?(seconds.to_i)
+
+    puts "Watching #{device_info} every #{seconds} second(s)...",
+         '  <Press Ctrl-C to exit>'
+
+    trap "SIGINT" do
+      puts 'And now the watch is ended.'
+      exit 0
+    end
+
+    loop do
+      puts "#{Time.now.strftime("%F %T")} " \
+           "Fan: #{current_percentage.round}% ~ #{rpm} rpm, " \
+           "Power: #{current_power} W"
+           "Temp: #{current_temperature}°C"
+      sleep seconds.to_i
+    end
   end
 
   private
@@ -67,6 +89,10 @@ class AmdgpuFanCli < Thor
 
   def current_temperature
     (File.read(TEMPERATURE_FILE).to_f / 1000).round(1)
+  end
+
+  def current_time
+    Time.now.strftime("%F %T")
   end
 
   def max
