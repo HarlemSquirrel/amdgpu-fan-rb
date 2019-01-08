@@ -9,8 +9,10 @@ class AmdgpuFanCli < Thor
   FAN_INPUT_FILE = Dir.glob("/sys/class/drm/card0/device/**/fan1_input").first
   FAN_MODE_FILE = Dir.glob("/sys/class/drm/card0/device/**/pwm1_enable").first
   FAN_MODES = { auto: '2', manual: '1' }.freeze
+  POWER_MAX_FILE = '/sys/class/drm/card0/device/hwmon/hwmon2/power1_cap'
+  POWER_AVG_FILE = '/sys/class/drm/card0/device/hwmon/hwmon2/power1_average'
   TEMPERATURE_FILE = Dir.glob("/sys/class/drm/card0/device/**/temp1_input").first
-  VBIOS_VERSION = File.read('/sys/class/drm/card0/device/vbios_version')
+  VBIOS_VERSION = File.read('/sys/class/drm/card0/device/vbios_version').strip
 
   desc 'auto', 'Set mode to automatic (requires sudo)'
   def auto
@@ -29,8 +31,9 @@ class AmdgpuFanCli < Thor
   def status
     puts device_info,
          "Video BIOS version: #{VBIOS_VERSION}",
-         "GPU fan in #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
-         "GPU temperature is #{current_temperature}°C"
+         "🌀\tFan:   #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
+         "🌡\tTemp:  #{current_temperature}°C",
+         "⚡\tPower: #{current_power} / #{power_max} Watts"
   end
 
   private
@@ -58,6 +61,10 @@ class AmdgpuFanCli < Thor
     current.to_f / max.to_i * 100
   end
 
+  def current_power
+    (File.read(POWER_AVG_FILE).strip.to_f / 1000000).round(2)
+  end
+
   def current_temperature
     (File.read(TEMPERATURE_FILE).to_f / 1000).round(1)
   end
@@ -72,6 +79,10 @@ class AmdgpuFanCli < Thor
 
   def in_manual_mode?
     File.read(FAN_MODE_FILE).strip == '1'
+  end
+
+  def power_max
+    @power_max ||= (File.read(POWER_MAX_FILE).strip.to_f / 1000000).round(2)
   end
 
   def rpm
