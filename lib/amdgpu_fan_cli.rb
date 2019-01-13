@@ -61,7 +61,7 @@ class AmdgpuFanCli < Thor
   private
 
   def device_info
-    @device_info ||= `glxinfo | grep -m 1 -o "AMD Radeon .* Series"`.strip
+    @device_info ||= lspci_subsystem.split(': ')[1].strip
   end
 
   def current
@@ -93,6 +93,14 @@ class AmdgpuFanCli < Thor
 
   def current_time
     Time.now.strftime("%F %T")
+  end
+
+  def gpu_pci_id
+    `lspci -v | grep VGA`.split(' ').first
+  end
+
+  def lspci_subsystem
+    `lspci -v -s #{gpu_pci_id} | grep "Subsystem:"`
   end
 
   def max
