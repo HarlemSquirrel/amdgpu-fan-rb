@@ -30,6 +30,7 @@ class AmdgpuFanCli < Thor
 
   desc 'status', 'View device info, current fan speed, and temperature'
   def status
+    print_radeon_logo
     puts "📺\tGPU:   #{device_info}",
          "📄\tvBIOS: #{VBIOS_VERSION}",
          "🌀\tFan:   #{current_mode} mode running at #{current_percentage.round}% ~ #{rpm} rpm",
@@ -117,6 +118,10 @@ class AmdgpuFanCli < Thor
 
   def power_max
     @power_max ||= (File.read(POWER_MAX_FILE).strip.to_f / 1000000).round(2)
+  end
+
+  def print_radeon_logo
+    puts File.read('lib/radeon_r_black_red_100x100.ascii')
   end
 
   def rpm
