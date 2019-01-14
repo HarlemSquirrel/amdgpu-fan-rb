@@ -130,6 +130,13 @@ RSpec.describe AmdgpuService do
 
   describe '#set_fan_manual_speed!' do
     let(:error) { described_class::Error }
+    let(:file_contents) { '255' }
+    let(:file_name) { 'pwm1_max' }
+
+    before do
+      File.write("#{file_dir}/#{file_name}", file_contents)
+    end
+
     context 'with no percent or raw provided' do
       it { expect { amdgpu_service.set_fan_manual_speed! }.to raise_error error }
     end

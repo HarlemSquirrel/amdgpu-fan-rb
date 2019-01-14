@@ -33,7 +33,7 @@ class AmdgpuService
   end
 
   def fan_speed_raw_max
-    @fan_speed_raw_max ||= File.read("#{fan_power_file}_max").strip
+    @fan_speed_raw_max ||= File.read(Dir.glob("#{base_card_folder}/**/pwm1_max").first).strip
   end
 
   def fan_speed_rpm
