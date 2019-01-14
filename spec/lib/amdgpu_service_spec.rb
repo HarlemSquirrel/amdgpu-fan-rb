@@ -128,6 +128,13 @@ RSpec.describe AmdgpuService do
     end
   end
 
+  describe '#set_fan_manual_speed!' do
+    let(:error) { described_class::Error }
+    context 'with no percent or raw provided' do
+      it { expect { amdgpu_service.set_fan_manual_speed! }.to raise_error error }
+    end
+  end
+
   describe '#temperature' do
     let(:file_name) { 'temp1_input' }
     let(:file_contents) { rand(1000..9999) }

@@ -10,6 +10,8 @@ class AmdgpuService
 
   attr_reader :card_num
 
+  class Error < StandardError; end
+
   def initialize(card_num: 0)
     @card_num = card_num
   end
@@ -61,7 +63,7 @@ class AmdgpuService
       new_raw = raw
     end
 
-    raise(::Error, 'Invalid fan speed provided') unless defined?(new_raw)
+    raise(self.class::Error, 'Invalid fan speed provided') if new_raw.to_s.empty?
 
     set_fan_mode!(:manual) unless fan_mode == 'manual'
 
@@ -129,6 +131,4 @@ class AmdgpuService
   def valid_fan_percent_speed?(percent)
     (1..100.to_i).include?(percent.to_i)
   end
-
-  class Error < StandardError; end
 end
