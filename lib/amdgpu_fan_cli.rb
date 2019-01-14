@@ -16,6 +16,9 @@ class AmdgpuFanCli < Thor
 
     amdgpu_service.set_fan_manual_speed! percent: percentage
     puts fan_status
+  rescue AmdgpuService::Error
+    puts 'Invalid fan speed provided. The percentage should be between 1 and 100'
+    exit 1
   end
 
   desc 'status', 'View device info, current fan speed, and temperature'
