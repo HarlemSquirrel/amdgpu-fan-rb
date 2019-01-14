@@ -7,6 +7,8 @@ See https://wiki.archlinux.org/index.php/Fan_speed_control#AMDGPU_sysfs_fan_cont
 ## Usage
 
 ```
+➤  bundle
+
 ➤  bin/amdgpu_fan help
 Commands:
   amdgpu_fan auto             # Set mode to automatic (requires sudo)
@@ -22,3 +24,10 @@ Commands:
 🌡	Temp:  28.0°C
 ⚡	Power: 19.26 / 300.0 Watts
 ```
+
+## Dependencies
+
+- Ruby
+- bundler
+- thor (installed with bundler)
+- lspci (included with most Linux distributions)
