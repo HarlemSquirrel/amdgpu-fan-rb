@@ -1,5 +1,7 @@
 # amdgpu-fan-rb
 
+[![Build Status](https://travis-ci.org/HarlemSquirrel/amdgpu-fan-rb.svg?branch=master)](https://travis-ci.org/HarlemSquirrel/amdgpu-fan-rb)
+
 A Ruby CLI to read and set the fan speed for AMD Radeon graphics cards running on the AMDGPU Linux driver.
 
 See https://wiki.archlinux.org/index.php/Fan_speed_control#AMDGPU_sysfs_fan_control
