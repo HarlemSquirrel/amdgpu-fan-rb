@@ -4,12 +4,29 @@ A Ruby CLI to read and set the fan speed for AMD Radeon graphics cards running o
 
 See https://wiki.archlinux.org/index.php/Fan_speed_control#AMDGPU_sysfs_fan_control
 
+## Installation
+
+The `amdgpu_fan` CLI command can be installed from [RubyGems](https://rubygems.org/gems/amdgpu_fan) or easily run from the source code.
+
+### From RubyGems
+
+```
+gem install amdgpu_fan
+```
+
+### From Source
+
+```
+➤  git clone https://github.com/HarlemSquirrel/amdgpu-fan-rb.git
+➤  cd amdgpu-fan-rb
+➤  bundle install
+➤  bin/amdgpu_fan
+```
+
 ## Usage
 
 ```
-➤  bundle
-
-➤  bin/amdgpu_fan help
+➤  amdgpu_fan help
 Commands:
   amdgpu_fan auto             # Set mode to automatic (requires sudo)
   amdgpu_fan help [COMMAND]   # Describe available commands or one specific command
@@ -17,7 +34,7 @@ Commands:
   amdgpu_fan status           # View device info, current fan speed, and temperature
   amdgpu_fan watch [SECONDS]  # Watch current fan speed, and temperature refreshed every n seconds
 
-➤  bin/amdgpu_fan status
+➤  amdgpu_fan status
 📺	GPU:   AMD Radeon (TM) R9 Fury Series
 📄	vBIOS: 113-C8800100-102
 🌀	Fan:   auto mode running at 48% ~ 1828 rpm
@@ -27,7 +44,6 @@ Commands:
 
 ## Dependencies
 
-- Ruby
-- bundler
-- thor (installed with bundler)
-- lspci (included with most Linux distributions)
+- [Ruby](https://www.ruby-lang.org) with [Bundler](https://bundler.io)
+- [Thor](http://whatisthor.com/) (installed with `bundle install`)
+- [`lspci`](https://linux.die.net/man/8/lspci) (included with most Linux distributions)
