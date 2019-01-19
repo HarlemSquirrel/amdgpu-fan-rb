@@ -20,6 +20,10 @@ class AmdgpuService
     File.read("#{base_card_folder}/gpu_busy_percent").strip
   end
 
+  def core_clock
+    clock_from_pp_file "/sys/class/drm/card#{card_num}/device/pp_dpm_sclk"
+  end
+
   def fan_mode
     FAN_MODES[File.read(fan_mode_file).strip] || 'unknown'
   end
@@ -38,6 +42,10 @@ class AmdgpuService
 
   def fan_speed_rpm
     File.read(fan_input_file).strip
+  end
+
+  def memory_clock
+    clock_from_pp_file "/sys/class/drm/card#{card_num}/device/pp_dpm_mclk"
   end
 
   def name
@@ -84,6 +92,10 @@ class AmdgpuService
     @base_card_folder ||= "#{BASE_FOLDER}/card#{card_num}/device"
   end
 
+  def clock_from_pp_file(file)
+    File.read(file).slice /\w+(?= \*)/
+  end
+
   def fan_input_file
     @fan_input_file ||= Dir.glob("#{base_card_folder}/**/fan1_input").first
   end
@@ -113,7 +125,7 @@ class AmdgpuService
   end
 
   def power_max_file
-    @power_avg_file ||= Dir.glob("#{base_card_folder}/**/power1_cap").first
+    @power_max_file ||= Dir.glob("#{base_card_folder}/**/power1_cap").first
   end
 
   def power_raw_to_watts(raw_string)

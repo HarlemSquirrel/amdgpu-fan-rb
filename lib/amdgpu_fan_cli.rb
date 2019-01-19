@@ -26,6 +26,7 @@ class AmdgpuFanCli < Thor
     print_radeon_logo
     puts "📺\tGPU:   #{amdgpu_service.name}",
          "📄\tvBIOS: #{amdgpu_service.vbios_version}",
+         clock_status,
          fan_status,
          "🌡\tTemp:  #{amdgpu_service.temperature}°C",
          "⚡\tPower: #{amdgpu_service.power_dpm_state} mode using " \
@@ -48,6 +49,7 @@ class AmdgpuFanCli < Thor
 
     loop do
       puts "#{Time.now.strftime("%F %T")} " \
+           "#{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory" \
            "Fan: #{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%), " \
            "Load: #{amdgpu_service.busy_percent}%, " \
            "Power: #{amdgpu_service.power_draw} W, " \
@@ -60,6 +62,10 @@ class AmdgpuFanCli < Thor
 
   def amdgpu_service
     @amdgpu_service ||= AmdgpuService.new
+  end
+
+  def clock_status
+    "⏰\tClocks: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
   end
 
   def current_time
