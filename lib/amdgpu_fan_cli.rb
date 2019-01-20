@@ -48,11 +48,11 @@ class AmdgpuFanCli < Thor
     end
 
     loop do
-      puts "#{Time.now.strftime("%F %T")} " \
-           "#{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory" \
-           "Fan: #{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%), " \
-           "Load: #{amdgpu_service.busy_percent}%, " \
-           "Power: #{amdgpu_service.power_draw} W, " \
+      puts "#{Time.now.strftime("%F %T")} - " \
+           "Clock: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory,\t" \
+           "Fan: #{amdgpu_service.fan_speed_rpm} rpm #{percent_meter amdgpu_service.fan_speed_percent},\t" \
+           "Load: #{percent_meter amdgpu_service.busy_percent},\t" \
+           "Power: #{amdgpu_service.power_draw} W,\t" \
            "Temp: #{amdgpu_service.temperature}°C "
       sleep seconds.to_i
     end
@@ -75,6 +75,11 @@ class AmdgpuFanCli < Thor
   def fan_status
     "🌀\tFan:   #{amdgpu_service.fan_mode} mode running at " \
      "#{amdgpu_service.fan_speed_percent}% ~ #{amdgpu_service.fan_speed_rpm} rpm"
+  end
+
+  def percent_meter(percent)
+    progress_bar_count = (percent.to_i / 10.0).round
+    "[#{'|' * progress_bar_count}#{' ' * (10 - progress_bar_count)}]#{percent}%"
   end
 
   def print_radeon_logo
