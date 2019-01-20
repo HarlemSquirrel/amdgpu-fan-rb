@@ -31,7 +31,7 @@ class AmdgpuFanCli < Thor
          "🌡\tTemp:  #{amdgpu_service.temperature}°C",
          "⚡\tPower: #{amdgpu_service.power_dpm_state} mode using " \
           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts",
-         "⚖\tLoad: #{amdgpu_service.busy_percent}%"
+         "⚖\tLoad: #{percent_meter amdgpu_service.busy_percent, 20}"
   end
 
   desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
@@ -77,9 +77,9 @@ class AmdgpuFanCli < Thor
      "#{amdgpu_service.fan_speed_percent}% ~ #{amdgpu_service.fan_speed_rpm} rpm"
   end
 
-  def percent_meter(percent)
-    progress_bar_count = (percent.to_i / 10.0).round
-    "[#{'|' * progress_bar_count}#{' ' * (10 - progress_bar_count)}]#{percent}%"
+  def percent_meter(percent, length = 10)
+    progress_bar_count = (length * percent.to_f / 100).round
+    "[#{'|' * progress_bar_count}#{' ' * (length - progress_bar_count)}]#{percent}%"
   end
 
   def print_radeon_logo
