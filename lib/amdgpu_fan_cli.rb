@@ -58,6 +58,30 @@ class AmdgpuFanCli < Thor
     end
   end
 
+  desc 'watch_csv [SECONDS]', 'Watch stats in CSV format ' \
+       'refreshed every n seconds defaulting to 1 second'
+  def watch_csv(seconds=1)
+    return puts "Seconds must be from 1 to 600" unless (1..600).cover?(seconds.to_i)
+
+    puts 'Timestamp, Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm), '\
+         'Load (%),Power (Watts),Temp (°C)'
+
+    trap "SIGINT" do
+      exit 0
+    end
+
+    loop do
+      puts [Time.now.strftime("%F %T"),
+            amdgpu_service.core_clock,
+            amdgpu_service.memory_clock,
+            amdgpu_service.fan_speed_rpm,
+            amdgpu_service.busy_percent,
+            amdgpu_service.power_draw,
+            amdgpu_service.temperature].join(',')
+      sleep seconds.to_i
+    end
+  end
+
   private
 
   def amdgpu_service
