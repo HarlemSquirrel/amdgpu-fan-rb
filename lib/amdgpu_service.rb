@@ -20,6 +20,12 @@ class AmdgpuService
     File.read("#{base_card_folder}/gpu_busy_percent").strip
   end
 
+  def connectors_status
+    connectors_files.each_with_object({}) do |f, connectors|
+      connectors[f.slice(/(?<=card0-)(\w|-)+/)] = File.read(f).strip
+    end
+  end
+
   def core_clock
     clock_from_pp_file "/sys/class/drm/card#{card_num}/device/pp_dpm_sclk"
   end
@@ -94,6 +100,10 @@ class AmdgpuService
 
   def clock_from_pp_file(file)
     File.read(file).slice /\w+(?= \*)/
+  end
+
+  def connectors_files
+    @connectors_files ||= Dir["/sys/class/drm/card#{card_num}*/status"].sort
   end
 
   def fan_input_file

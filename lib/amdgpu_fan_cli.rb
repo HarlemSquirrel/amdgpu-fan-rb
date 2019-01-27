@@ -4,10 +4,17 @@ require_relative '../config/environment'
 
 # The main class
 class AmdgpuFanCli < Thor
-  desc 'auto', 'Set mode to automatic (requires sudo)'
+  desc 'auto', 'Set fan mode to automatic (requires sudo)'
   def auto
     amdgpu_service.set_fan_mode! :auto
     puts fan_status
+  end
+
+  desc 'connectors', 'View the status of the display connectors'
+  def connectors
+    amdgpu_service.connectors_status.each do |connector,status|
+      puts "#{connector}: #{status}"
+    end
   end
 
   desc 'set PERCENTAGE', 'Set fan speed to PERCENTAGE (requires sudo)'
