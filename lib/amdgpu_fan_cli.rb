@@ -30,8 +30,8 @@ class AmdgpuFanCli < Thor
 
   desc 'status', 'View device info, current fan speed, and temperature'
   def status
-    print_radeon_logo
-    puts "📺\tGPU:   #{amdgpu_service.name}",
+    puts radeon_logo,
+         "📺\tGPU:   #{amdgpu_service.name}",
          "📄\tvBIOS: #{amdgpu_service.vbios_version}",
          clock_status,
          fan_status,
@@ -96,7 +96,8 @@ class AmdgpuFanCli < Thor
   end
 
   def clock_status
-    "⏰\tClocks: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
+    "⏰\tClocks: #{amdgpu_service.core_clock} Core, " \
+    "#{amdgpu_service.memory_clock} Memory"
   end
 
   def current_time
@@ -113,7 +114,7 @@ class AmdgpuFanCli < Thor
     "[#{'|' * progress_bar_count}#{' ' * (length - progress_bar_count)}]#{percent}%"
   end
 
-  def print_radeon_logo
-    puts File.read('lib/radeon_r_black_red_100x100.ascii')
+  def radeon_logo
+    File.read(File.join(__dir__, '../lib/radeon_r_black_red_100x100.ascii'))
   end
 end
