@@ -50,7 +50,7 @@ class AmdgpuFanCli < Thor
          '  <Press Ctrl-C to exit>'
 
     trap "SIGINT" do
-      puts 'And now the watch is ended.'
+      puts "\nAnd now the watch is ended."
       exit 0
     end
 

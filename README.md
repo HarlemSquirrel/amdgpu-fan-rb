@@ -42,6 +42,15 @@ Commands:
 🌀	Fan:   auto mode running at 48% ~ 1828 rpm
 🌡	Temp:  28.0°C
 ⚡	Power: 19.26 / 300.0 Watts
+
+➤  bin/amdgpu_fan watch 3
+Watching Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO every 3 second(s)...
+  <Press Ctrl-C to exit>
+2019-05-10 20:36:01 - Clock: 512Mhz Core, 500Mhz Memory,        Fan: 1838 rpm [|||       ]27%,  Load: [|||       ]28%,  Power: 15.12 W, Temp: 28.0°C
+2019-05-10 20:36:05 - Clock: 300Mhz Core, 500Mhz Memory,        Fan: 1837 rpm [|||||     ]49%,  Load: [          ]0%,   Power: 16.18 W, Temp: 29.0°C
+2019-05-10 20:36:09 - Clock: 512Mhz Core, 500Mhz Memory,        Fan: 1837 rpm [|||||     ]49%,  Load: [          ]0%,   Power: 15.11 W, Temp: 28.0°C
+^C
+And now the watch is ended.
 ```
 
 ## Dependencies
