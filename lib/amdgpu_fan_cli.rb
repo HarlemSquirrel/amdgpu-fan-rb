@@ -4,6 +4,9 @@ require_relative '../config/environment'
 
 # The main class
 class AmdgpuFanCli < Thor
+  METER_CHAR = '*'
+  WATCH_FIELD_SEPARATOR = ' | '
+
   desc 'auto', 'Set fan mode to automatic (requires sudo)'
   def auto
     amdgpu_service.set_fan_mode! :auto
@@ -56,12 +59,9 @@ class AmdgpuFanCli < Thor
     end
 
     loop do
-      puts "#{Time.now.strftime("%F %T")} - " \
-           "Clock: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory,\t" \
-           "Fan: #{amdgpu_service.fan_speed_rpm} rpm #{percent_meter amdgpu_service.fan_speed_percent},\t" \
-           "Load: #{percent_meter amdgpu_service.busy_percent},\t" \
-           "Power: #{amdgpu_service.power_draw} W #{percent_meter amdgpu_service.power_draw_percent},\t" \
-           "Temp: #{amdgpu_service.temperature}°C "
+      puts [Time.now.strftime("%F %T"), summary_clock, summary_fan, summary_load, summary_power,
+            summary_temp].join(WATCH_FIELD_SEPARATOR)
+
       sleep seconds.to_i
     end
   end
@@ -112,10 +112,35 @@ class AmdgpuFanCli < Thor
 
   def percent_meter(percent, length = 10)
     progress_bar_count = (length * percent.to_f / 100).round
-    "[#{'|' * progress_bar_count}#{' ' * (length - progress_bar_count)}]#{percent}%"
+    percent_string = "#{percent}%".ljust(4)
+    "[#{METER_CHAR * progress_bar_count}#{' ' * (length - progress_bar_count)}]#{percent_string}"
   end
 
   def radeon_logo
     File.read(File.join(__dir__, '../lib/radeon_r_black_red_100x100.ascii'))
+  end
+
+  def summary_clock
+    "Clock: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
+  end
+
+  def summary_fan
+    fan_speed_string = "#{amdgpu_service.fan_speed_rpm} rpm"
+                         .ljust(amdgpu_service.fan_speed_raw_max.to_s.length + 4)
+    "Fan: #{fan_speed_string} #{percent_meter(amdgpu_service.fan_speed_percent)}"
+  end
+
+  def summary_load
+    "Load: #{percent_meter amdgpu_service.busy_percent}"
+  end
+
+  def summary_power
+    power_string = "#{amdgpu_service.power_draw} W".ljust(amdgpu_service.power_max.to_s.length + 2)
+    "Power: #{power_string} #{percent_meter amdgpu_service.power_draw_percent}"
+  end
+
+  def summary_temp
+    temp_string = "#{amdgpu_service.temperature}°C".ljust(7)
+    "Temp: #{temp_string}"
   end
 end
