@@ -37,7 +37,8 @@ class AmdgpuFanCli < Thor
          fan_status,
          "🌡\tTemp:  #{amdgpu_service.temperature}°C",
          "⚡\tPower: #{amdgpu_service.power_dpm_state} mode using " \
-          "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts",
+          "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
+          "(#{amdgpu_service.power_draw_percent}%)",
          "⚖\tLoad: #{percent_meter amdgpu_service.busy_percent, 20}"
   end
 
@@ -59,7 +60,7 @@ class AmdgpuFanCli < Thor
            "Clock: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory,\t" \
            "Fan: #{amdgpu_service.fan_speed_rpm} rpm #{percent_meter amdgpu_service.fan_speed_percent},\t" \
            "Load: #{percent_meter amdgpu_service.busy_percent},\t" \
-           "Power: #{amdgpu_service.power_draw} W,\t" \
+           "Power: #{amdgpu_service.power_draw} W #{percent_meter amdgpu_service.power_draw_percent},\t" \
            "Temp: #{amdgpu_service.temperature}°C "
       sleep seconds.to_i
     end
@@ -106,7 +107,7 @@ class AmdgpuFanCli < Thor
 
   def fan_status
     "🌀\tFan:   #{amdgpu_service.fan_mode} mode running at " \
-     "#{amdgpu_service.fan_speed_percent}% ~ #{amdgpu_service.fan_speed_rpm} rpm"
+     "#{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%)"
   end
 
   def percent_meter(percent, length = 10)

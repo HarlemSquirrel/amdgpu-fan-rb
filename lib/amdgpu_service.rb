@@ -66,6 +66,10 @@ class AmdgpuService
     power_raw_to_watts File.read(power_avg_file)
   end
 
+  def power_draw_percent
+    (power_draw.to_f / power_max.to_i * 100).round
+  end
+
   def power_max
     @power_max ||= power_raw_to_watts File.read(power_max_file)
   end

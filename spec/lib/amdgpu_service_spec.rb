@@ -96,6 +96,20 @@ RSpec.describe AmdgpuService do
     it { expect(amdgpu_service.power_draw).to eq 52.21 }
   end
 
+  describe '#power_draw_percent' do
+    let(:power_avg_file_name) { 'power1_average' }
+    let(:power_avg_file_contents) { 52_210_000 }
+    let(:power_cap_file_name) { 'power1_cap' }
+    let(:power_cap_file_contents) { 300_000_000 }
+
+    before do
+      File.write("#{file_dir}/#{power_avg_file_name}", power_avg_file_contents)
+      File.write("#{file_dir}/#{power_cap_file_name}", power_cap_file_contents)
+    end
+
+    it { expect(amdgpu_service.power_draw_percent).to eq 17 }
+  end
+
   describe '#power_max' do
     let(:file_name) { 'power1_cap' }
     let(:file_contents) { 300_000_000 }
