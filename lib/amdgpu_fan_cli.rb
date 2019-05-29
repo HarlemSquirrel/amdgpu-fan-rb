@@ -121,12 +121,12 @@ class AmdgpuFanCli < Thor
   end
 
   def summary_clock
-    "Clock: #{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
+    "Core: #{amdgpu_service.core_clock.ljust(7)} #{WATCH_FIELD_SEPARATOR}"\
+      "Memory: #{amdgpu_service.memory_clock.ljust(7)}"
   end
 
   def summary_fan
-    fan_speed_string = "#{amdgpu_service.fan_speed_rpm} rpm"
-                         .ljust(amdgpu_service.fan_speed_raw_max.to_s.length + 4)
+    fan_speed_string = "#{amdgpu_service.fan_speed_rpm} rpm".ljust(8)
     "Fan: #{fan_speed_string} #{percent_meter(amdgpu_service.fan_speed_percent)}"
   end
 
@@ -135,7 +135,7 @@ class AmdgpuFanCli < Thor
   end
 
   def summary_power
-    power_string = "#{amdgpu_service.power_draw} W".ljust(amdgpu_service.power_max.to_s.length + 2)
+    power_string = "#{amdgpu_service.power_draw} W".ljust(amdgpu_service.power_max.to_s.length + 3)
     "Power: #{power_string} #{percent_meter amdgpu_service.power_draw_percent}"
   end
 

@@ -46,9 +46,16 @@ Commands:
 ➤  bin/amdgpu_fan watch 3
 Watching Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO every 3 second(s)...
   <Press Ctrl-C to exit>
-2019-05-10 20:36:01 - Clock: 512Mhz Core, 500Mhz Memory,        Fan: 1838 rpm [|||       ]27%,  Load: [|||       ]28%,  Power: 15.12 W, Temp: 28.0°C
-2019-05-10 20:36:05 - Clock: 300Mhz Core, 500Mhz Memory,        Fan: 1837 rpm [|||||     ]49%,  Load: [          ]0%,   Power: 16.18 W, Temp: 29.0°C
-2019-05-10 20:36:09 - Clock: 512Mhz Core, 500Mhz Memory,        Fan: 1837 rpm [|||||     ]49%,  Load: [          ]0%,   Power: 15.11 W, Temp: 28.0°C
+2019-05-28 20:57:41 | Core: 724Mhz   | Memory: 500Mhz  | Fan: 948 rpm  [*         ]14%  | Load: [**        ]24%  | Power: 16.07 W  [*         ]6%   | Temp: 34.0°C
+2019-05-28 20:57:45 | Core: 512Mhz   | Memory: 500Mhz  | Fan: 948 rpm  [*         ]14%  | Load: [          ]0%   | Power: 16.13 W  [*         ]7%   | Temp: 34.0°C
+2019-05-28 20:57:49 | Core: 892Mhz   | Memory: 500Mhz  | Fan: 948 rpm  [*         ]14%  | Load: [          ]0%   | Power: 25.22 W  [*         ]5%   | Temp: 33.0°C
+2019-05-28 20:57:53 | Core: 300Mhz   | Memory: 500Mhz  | Fan: 948 rpm  [*         ]14%  | Load: [          ]0%   | Power: 19.1 W   [*         ]6%   | Temp: 33.0°C
+2019-05-28 20:57:57 | Core: 1050Mhz  | Memory: 500Mhz  | Fan: 948 rpm  [*         ]14%  | Load: [********* ]94%  | Power: 103.04 W [***       ]31%  | Temp: 36.0°C
+2019-05-28 20:58:01 | Core: 1050Mhz  | Memory: 500Mhz  | Fan: 954 rpm  [**        ]15%  | Load: [********* ]91%  | Power: 158.07 W [*****     ]53%  | Temp: 38.0°C
+2019-05-28 20:58:05 | Core: 1050Mhz  | Memory: 500Mhz  | Fan: 977 rpm  [**        ]16%  | Load: [**********]100% | Power: 218.01 W [*******   ]73%  | Temp: 40.0°C
+2019-05-28 20:58:09 | Core: 1050Mhz  | Memory: 500Mhz  | Fan: 1005 rpm [**        ]16%  | Load: [**********]100% | Power: 216.24 W [*******   ]71%  | Temp: 40.0°C
+2019-05-28 20:58:13 | Core: 1050Mhz  | Memory: 500Mhz  | Fan: 1033 rpm [**        ]17%  | Load: [**********]97%  | Power: 109.25 W [****      ]39%  | Temp: 38.0°C
+2019-05-28 20:58:17 | Core: 724Mhz   | Memory: 500Mhz  | Fan: 1058 rpm [**        ]17%  | Load: [          ]0%   | Power: 17.17 W  [*         ]6%   | Temp: 35.0°C
 ^C
 And now the watch is ended.
 ```
