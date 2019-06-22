@@ -31,18 +31,18 @@ class AmdgpuFanCli < Thor
     exit 1
   end
 
-  desc 'status', 'View device info, current fan speed, and temperature'
-  def status
-    puts radeon_logo,
-         "📺\tGPU:   #{amdgpu_service.name}",
-         "📄\tvBIOS: #{amdgpu_service.vbios_version}",
-         clock_status,
-         fan_status,
-         "🌡\tTemp:  #{amdgpu_service.temperature}°C",
-         "⚡\tPower: #{amdgpu_service.power_dpm_state} mode using " \
+  desc 'status [--logo]', 'View device info, current fan speed, and temperature'
+  def status(option = nil)
+    puts radeon_logo if option == '--logo'
+    puts "📺 #{'GPU:'.ljust(7)} #{amdgpu_service.name}",
+         "📄 #{'vBIOS:'.ljust(7)} #{amdgpu_service.vbios_version}",
+         "⏰ #{'Clocks:'.ljust(7)} #{clock_status}",
+         "🌀 #{'Fan:'.ljust(7)} #{fan_status}",
+         "🌞 #{'Temp:'.ljust(7)} #{amdgpu_service.temperature}°C",
+         "⚡ #{'Power:'.ljust(7)} #{amdgpu_service.power_dpm_state} mode using " \
           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
           "(#{amdgpu_service.power_draw_percent}%)",
-         "⚖\tLoad: #{percent_meter amdgpu_service.busy_percent, 20}"
+         "⚖  #{'Load:'.ljust(7)} #{percent_meter amdgpu_service.busy_percent, 20}"
   end
 
   desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
@@ -97,8 +97,7 @@ class AmdgpuFanCli < Thor
   end
 
   def clock_status
-    "⏰\tClocks: #{amdgpu_service.core_clock} Core, " \
-    "#{amdgpu_service.memory_clock} Memory"
+    "#{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
   end
 
   def current_time
@@ -106,7 +105,7 @@ class AmdgpuFanCli < Thor
   end
 
   def fan_status
-    "🌀\tFan:   #{amdgpu_service.fan_mode} mode running at " \
+    "#{amdgpu_service.fan_mode} mode running at " \
      "#{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%)"
   end
 
