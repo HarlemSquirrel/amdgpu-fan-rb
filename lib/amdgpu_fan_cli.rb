@@ -59,10 +59,16 @@ class AmdgpuFanCli < Thor
     end
 
     loop do
-      puts [Time.now.strftime("%F %T"), summary_clock, summary_fan, summary_load, summary_power,
+      time = Time.now
+      puts [time.strftime("%F %T"), summary_clock, summary_fan, summary_load, summary_power,
             summary_temp].join(WATCH_FIELD_SEPARATOR)
 
-      sleep seconds.to_i
+      # It can take a second or two to run the above so we remove them from the wait
+      # here to get a more consistant watch interval.
+      sec_left_to_wait = time.to_i + seconds.to_i - Time.now.to_i
+      if sec_left_to_wait.positive?
+        sleep sec_left_to_wait
+      end
     end
   end
 
