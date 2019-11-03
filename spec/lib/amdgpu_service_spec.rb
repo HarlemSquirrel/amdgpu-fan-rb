@@ -18,7 +18,7 @@ RSpec.describe AmdgpuService do
 
   describe '#busy_percent' do
     let(:percent) { rand(99) }
-    let(:file_name) { "gpu_busy_percent" }
+    let(:file_name) { 'gpu_busy_percent' }
 
     before do
       FileUtils.mkdir_p file_dir
@@ -29,7 +29,7 @@ RSpec.describe AmdgpuService do
   end
 
   describe '#fan_mode' do
-    let(:file_name) { "pwm1_enable" }
+    let(:file_name) { 'pwm1_enable' }
 
     before do
       File.write("#{file_dir}/#{file_name}", file_contents)

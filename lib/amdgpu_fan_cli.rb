@@ -15,14 +15,14 @@ class AmdgpuFanCli < Thor
 
   desc 'connectors', 'View the status of the display connectors'
   def connectors
-    amdgpu_service.connectors_status.each do |connector,status|
+    amdgpu_service.connectors_status.each do |connector, status|
       puts "#{connector}: #{status}"
     end
   end
 
   desc 'set PERCENTAGE', 'Set fan speed to PERCENTAGE (requires sudo)'
   def set(percentage)
-    return puts "Invalid percentage" unless (0..100).cover?(percentage.to_i)
+    return puts 'Invalid percentage' unless (0..100).cover?(percentage.to_i)
 
     amdgpu_service.set_fan_manual_speed! percent: percentage
     puts fan_status
@@ -47,45 +47,43 @@ class AmdgpuFanCli < Thor
 
   desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
        'refreshed every n seconds'
-  def watch(seconds=1)
-    return puts "Seconds must be from 1 to 600" unless (1..600).cover?(seconds.to_i)
+  def watch(seconds = 1)
+    return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
     puts "Watching #{amdgpu_service.name} every #{seconds} second(s)...",
          '  <Press Ctrl-C to exit>'
 
-    trap "SIGINT" do
+    trap 'SIGINT' do
       puts "\nAnd now the watch is ended."
       exit 0
     end
 
     loop do
       time = Time.now
-      puts [time.strftime("%F %T"), summary_clock, summary_fan, summary_load, summary_power,
+      puts [time.strftime('%F %T'), summary_clock, summary_fan, summary_load, summary_power,
             summary_temp].join(WATCH_FIELD_SEPARATOR)
 
       # It can take a second or two to run the above so we remove them from the wait
       # here to get a more consistant watch interval.
       sec_left_to_wait = time.to_i + seconds.to_i - Time.now.to_i
-      if sec_left_to_wait.positive?
-        sleep sec_left_to_wait
-      end
+      sleep sec_left_to_wait if sec_left_to_wait.positive?
     end
   end
 
   desc 'watch_csv [SECONDS]', 'Watch stats in CSV format ' \
        'refreshed every n seconds defaulting to 1 second'
-  def watch_csv(seconds=1)
-    return puts "Seconds must be from 1 to 600" unless (1..600).cover?(seconds.to_i)
+  def watch_csv(seconds = 1)
+    return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
     puts 'Timestamp, Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm), '\
          'Load (%),Power (Watts),Temp (°C)'
 
-    trap "SIGINT" do
+    trap 'SIGINT' do
       exit 0
     end
 
     loop do
-      puts [Time.now.strftime("%F %T"),
+      puts [Time.now.strftime('%F %T'),
             amdgpu_service.core_clock,
             amdgpu_service.memory_clock,
             amdgpu_service.fan_speed_rpm,
@@ -107,7 +105,7 @@ class AmdgpuFanCli < Thor
   end
 
   def current_time
-    Time.now.strftime("%F %T")
+    Time.now.strftime('%F %T')
   end
 
   def fan_status

@@ -151,10 +151,10 @@ class AmdgpuService
   end
 
   def valid_fan_raw_speed?(raw)
-    (1..fan_speed_raw_max.to_i).include?(raw.to_i)
+    (1..fan_speed_raw_max.to_i).cover?(raw.to_i)
   end
 
   def valid_fan_percent_speed?(percent)
-    (1..100.to_i).include?(percent.to_i)
+    (1..100.to_i).cover?(percent.to_i)
   end
 end
