@@ -103,7 +103,7 @@ class AmdgpuService
   end
 
   def clock_from_pp_file(file)
-    File.read(file).slice /\w+(?= \*)/
+    File.read(file).slice(/\w+(?= \*)/)
   end
 
   def connectors_files
