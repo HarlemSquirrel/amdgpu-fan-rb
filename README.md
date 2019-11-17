@@ -1,10 +1,16 @@
-# amdgpu-fan-rb
+# amdgpu_fan
 
 [![Build Status](https://travis-ci.org/HarlemSquirrel/amdgpu-fan-rb.svg?branch=master)](https://travis-ci.org/HarlemSquirrel/amdgpu-fan-rb) [![Maintainability](https://api.codeclimate.com/v1/badges/27233cee17ef6a2c14fd/maintainability)](https://codeclimate.com/github/HarlemSquirrel/amdgpu-fan-rb/maintainability)
 
 A Ruby CLI to read and set fan speed, power profiles, and more for AMD Radeon graphics cards running on the AMDGPU Linux driver.
 
-See https://wiki.archlinux.org/index.php/Fan_speed_control#AMDGPU_sysfs_fan_control
+**amdgpu_fan** aims to provide a more user friendly interface on top of [sysfs](https://en.wikipedia.org/wiki/Sysfs) for displaying statistics and interacting with AMD Radeon graphics hardware running on the [AMDgpu](https://dri.freedesktop.org/docs/drm/gpu/amdgpu.html) driver.
+
+#### Further reading
+
+- https://wiki.archlinux.org/index.php/AMDGPU#Overclocking
+- https://wiki.archlinux.org/index.php/Fan_speed_control#AMDGPU_sysfs_fan_control
+- https://phoronix.com/scan.php?page=news_item&px=AMDGPU-Quick-WattMan-Cap-Test
 
 ## Installation
 
