@@ -9,7 +9,7 @@ class AmdgpuFanCli < Thor
 
   desc 'auto', 'Set fan mode to automatic (requires sudo)'
   def auto
-    amdgpu_service.set_fan_mode! :auto
+    amdgpu_service.fan_mode = :auto
     puts fan_status
   end
 
@@ -18,6 +18,23 @@ class AmdgpuFanCli < Thor
     amdgpu_service.connectors_status.each do |connector, status|
       puts "#{connector}: #{status}"
     end
+  end
+
+  desc 'profile', 'View power profile details.'
+  def profile
+    puts amdgpu_service.profile_summary
+  end
+
+  desc 'profile_auto', 'Set the power profile to automatic mode.'
+  def profile_auto
+    amdgpu_service.profile_auto
+    puts amdgpu_service.profile_summary
+  end
+
+  desc 'profile_force [PROFILE_NUM]', 'Manually set a power profile.'
+  def profile_force(state)
+    amdgpu_service.profile_force = state
+    puts amdgpu_service.profile_summary
   end
 
   desc 'set PERCENTAGE', 'Set fan speed to PERCENTAGE (requires sudo)'
@@ -39,7 +56,8 @@ class AmdgpuFanCli < Thor
          "⏰ #{'Clocks:'.ljust(7)} #{clock_status}",
          "🌀 #{'Fan:'.ljust(7)} #{fan_status}",
          "🌞 #{'Temp:'.ljust(7)} #{amdgpu_service.temperature}°C",
-         "⚡ #{'Power:'.ljust(7)} #{amdgpu_service.power_dpm_state} mode using " \
+         "⚡ #{'Power:'.ljust(7)} #{amdgpu_service.profile_mode} profile in " \
+          "#{amdgpu_service.power_dpm_state} mode using " \
           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
           "(#{amdgpu_service.power_draw_percent}%)",
          "⚖  #{'Load:'.ljust(7)} #{percent_meter amdgpu_service.busy_percent, 20}"

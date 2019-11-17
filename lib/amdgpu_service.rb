@@ -27,14 +27,14 @@ class AmdgpuService
   end
 
   def core_clock
-    clock_from_pp_file "/sys/class/drm/card#{card_num}/device/pp_dpm_sclk"
+    clock_from_pp_file "#{base_card_folder}/pp_dpm_sclk"
   end
 
   def fan_mode
     FAN_MODES[File.read(fan_mode_file).strip] || 'unknown'
   end
 
-  def set_fan_mode!(mode)
+  def fan_mode=(mode)
     `echo "#{FAN_MODES.key(mode.to_s)}" | sudo tee #{fan_mode_file}`
   end
 
@@ -51,7 +51,7 @@ class AmdgpuService
   end
 
   def memory_clock
-    clock_from_pp_file "/sys/class/drm/card#{card_num}/device/pp_dpm_mclk"
+    clock_from_pp_file "#{base_card_folder}/pp_dpm_mclk"
   end
 
   def name
@@ -74,6 +74,23 @@ class AmdgpuService
     @power_max ||= power_raw_to_watts File.read(power_max_file)
   end
 
+  def profile_auto
+    `echo "auto" | sudo tee "#{base_card_folder}/power_dpm_force_performance_level"`
+  end
+
+  def profile_force=(state)
+    `echo "manual" | sudo tee "#{base_card_folder}/power_dpm_force_performance_level"`
+    `echo "#{state}" | sudo tee "#{base_card_folder}/pp_power_profile_mode"`
+  end
+
+  def profile_mode
+    File.read("#{base_card_folder}/pp_power_profile_mode").slice(/\w+ \*/).delete('*').strip
+  end
+
+  def profile_summary
+    File.read("#{base_card_folder}/pp_power_profile_mode")
+  end
+
   def set_fan_manual_speed!(percent: nil, raw: nil)
     if valid_fan_percent_speed?(percent)
       new_raw = (percent.to_f / 100 * fan_speed_raw_max.to_i).round
@@ -83,7 +100,7 @@ class AmdgpuService
 
     raise(self.class::Error, 'Invalid fan speed provided') if new_raw.to_s.empty?
 
-    set_fan_mode!(:manual) unless fan_mode == 'manual'
+    fan_mode = :manual unless fan_mode == 'manual'
 
     `echo "#{new_raw}" | sudo tee #{fan_power_file}`
   end
