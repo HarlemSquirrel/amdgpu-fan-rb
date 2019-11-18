@@ -34,18 +34,18 @@ gem install amdgpu_fan
 ## Usage
 
 ```
-➤  bin/amdgpu_fan
+➤  bin/amdgpu_fan help
 Commands:
-  amdgpu_fan auto                         # Set fan mode to automatic (requires sudo)
-  amdgpu_fan connectors                   # View the status of the display connectors
-  amdgpu_fan help [COMMAND]               # Describe available commands or one specific command
-  amdgpu_fan profile                      # View power profile details.
-  amdgpu_fan profile_auto                 # Set the power profile to automatic mode.
-  amdgpu_fan profile_force [PROFILE_NUM]  # Manually set a power profile.
-  amdgpu_fan set PERCENTAGE               # Set fan speed to PERCENTAGE (requires sudo)
-  amdgpu_fan status [--logo]              # View device info, current fan speed, and temperature
-  amdgpu_fan watch [SECONDS]              # Watch fan speed, load, power, and temperature refreshed every n seconds
-  amdgpu_fan watch_csv [SECONDS]          # Watch stats in CSV format refreshed every n seconds defaulting to 1 second
+  amdgpu_fan connectors                 # View the status of the display connectors.
+  amdgpu_fan fan                        # View fan details.
+  amdgpu_fan fan_set PERCENTAGE/AUTO    # Set fan speed to percentage or automatic mode. (requires sudo)
+  amdgpu_fan help [COMMAND]             # Describe available commands or one specific command
+  amdgpu_fan profile                    # View power profile details.
+  amdgpu_fan profile_auto               # Set the power profile to automatic mode.
+  amdgpu_fan profile_force PROFILE_NUM  # Manually set a power profile. (requires sudo)
+  amdgpu_fan status [--logo]            # View device info, current fan speed, and temperature.
+  amdgpu_fan watch [SECONDS]            # Watch fan speed, load, power, and temperature refreshed every n seconds.
+  amdgpu_fan watch_csv [SECONDS]        # Watch stats in CSV format refreshed every n seconds defaulting to 1 second.
 
 ➤  amdgpu_fan status
 📺	GPU:   AMD Radeon (TM) R9 Fury Series

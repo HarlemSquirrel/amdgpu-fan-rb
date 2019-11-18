@@ -7,13 +7,7 @@ class AmdgpuFanCli < Thor
   METER_CHAR = '*'
   WATCH_FIELD_SEPARATOR = ' | '
 
-  desc 'auto', 'Set fan mode to automatic (requires sudo)'
-  def auto
-    amdgpu_service.fan_mode = :auto
-    puts fan_status
-  end
-
-  desc 'connectors', 'View the status of the display connectors'
+  desc 'connectors', 'View the status of the display connectors.'
   def connectors
     amdgpu_service.connectors_status.each do |connector, status|
       puts "#{connector}: #{status}"
@@ -31,24 +25,30 @@ class AmdgpuFanCli < Thor
     puts amdgpu_service.profile_summary
   end
 
-  desc 'profile_force [PROFILE_NUM]', 'Manually set a power profile.'
+  desc 'profile_force PROFILE_NUM', 'Manually set a power profile. (requires sudo)'
   def profile_force(state)
     amdgpu_service.profile_force = state
     puts amdgpu_service.profile_summary
   end
 
-  desc 'set PERCENTAGE', 'Set fan speed to PERCENTAGE (requires sudo)'
-  def set(percentage)
-    return puts 'Invalid percentage' unless (0..100).cover?(percentage.to_i)
-
-    amdgpu_service.set_fan_manual_speed! percent: percentage
+  desc 'fan', 'View fan details.'
+  def fan
     puts fan_status
-  rescue AmdgpuService::Error
-    puts 'Invalid fan speed provided. The percentage should be between 1 and 100'
-    exit 1
   end
 
-  desc 'status [--logo]', 'View device info, current fan speed, and temperature'
+  desc 'fan_set PERCENTAGE/AUTO', 'Set fan speed to percentage or automatic mode. (requires sudo)'
+  def fan_set(value)
+    if value.strip.casecmp('auto').zero?
+      amdgpu_service.fan_mode = :auto
+    else
+      return puts 'Invalid percentage' unless (0..100).cover?(value.to_i)
+
+      amdgpu_service.fan_speed = value
+    end
+    puts fan_status
+  end
+
+  desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
   def status(option = nil)
     puts radeon_logo if option == '--logo'
     puts "📺 #{'GPU:'.ljust(7)} #{amdgpu_service.name}",
@@ -64,7 +64,7 @@ class AmdgpuFanCli < Thor
   end
 
   desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
-       'refreshed every n seconds'
+       'refreshed every n seconds.'
   def watch(seconds = 1)
     return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
@@ -89,7 +89,7 @@ class AmdgpuFanCli < Thor
   end
 
   desc 'watch_csv [SECONDS]', 'Watch stats in CSV format ' \
-       'refreshed every n seconds defaulting to 1 second'
+       'refreshed every n seconds defaulting to 1 second.'
   def watch_csv(seconds = 1)
     return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 

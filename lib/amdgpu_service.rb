@@ -38,12 +38,30 @@ class AmdgpuService
     `echo "#{FAN_MODES.key(mode.to_s)}" | sudo tee #{fan_mode_file}`
   end
 
+  def fan_speed=(value)
+    if valid_fan_percent_speed?(value)
+      new_raw = (value.to_f / 100 * fan_speed_raw_max.to_i).round
+    elsif valid_fan_raw_speed?(value)
+      new_raw = value
+    end
+
+    raise(self.class::Error, 'Invalid fan speed provided') if new_raw.to_s.empty?
+
+    self.fan_mode = :manual unless fan_mode == 'manual'
+
+    `echo "#{new_raw}" | sudo tee #{fan_power_file}`
+  end
+
   def fan_speed_percent
     (fan_speed_raw.to_f / fan_speed_raw_max.to_i * 100).round
   end
 
   def fan_speed_raw_max
     @fan_speed_raw_max ||= File.read(Dir.glob("#{base_card_folder}/**/pwm1_max").first).strip
+  end
+
+  def fan_speed_raw_min
+    @fan_speed_raw_min ||= File.read(Dir.glob("#{base_card_folder}/**/pwm1_min").first).strip
   end
 
   def fan_speed_rpm
@@ -89,20 +107,6 @@ class AmdgpuService
 
   def profile_summary
     File.read("#{base_card_folder}/pp_power_profile_mode")
-  end
-
-  def set_fan_manual_speed!(percent: nil, raw: nil)
-    if valid_fan_percent_speed?(percent)
-      new_raw = (percent.to_f / 100 * fan_speed_raw_max.to_i).round
-    elsif valid_fan_raw_speed?(raw)
-      new_raw = raw
-    end
-
-    raise(self.class::Error, 'Invalid fan speed provided') if new_raw.to_s.empty?
-
-    fan_mode = :manual unless fan_mode == 'manual'
-
-    `echo "#{new_raw}" | sudo tee #{fan_power_file}`
   end
 
   def temperature
@@ -168,7 +172,7 @@ class AmdgpuService
   end
 
   def valid_fan_raw_speed?(raw)
-    (1..fan_speed_raw_max.to_i).cover?(raw.to_i)
+    (fan_speed_raw_min.to_i..fan_speed_raw_max.to_i).cover?(raw.to_i)
   end
 
   def valid_fan_percent_speed?(percent)
