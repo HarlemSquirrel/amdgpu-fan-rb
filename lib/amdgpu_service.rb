@@ -102,7 +102,7 @@ class AmdgpuService
   end
 
   def profile_mode
-    File.read("#{base_card_folder}/pp_power_profile_mode").slice(/\w+ \*/).delete('*').strip
+    File.read("#{base_card_folder}/pp_power_profile_mode").slice(/(\w|\s)+\*/).delete('*').strip
   end
 
   def profile_summary
