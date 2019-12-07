@@ -169,17 +169,23 @@ RSpec.describe AmdgpuService do
 
       before do
         allow(amdgpu_service).to receive(:sudo_write)
-                             .with("#{file_dir}/#{file_name}", 64) { File.write "#{file_dir}/#{file_name}", "64\n" }
+          .with("#{file_dir}/#{file_name}", 64) { File.write "#{file_dir}/#{file_name}", "64\n" }
         allow(amdgpu_service).to receive(:sudo_write)
-                             .with("#{file_dir}/#{enabled_file_name}", "1") { File.write "#{file_dir}/#{enabled_file_name}", "1\n"}
+          .with("#{file_dir}/#{enabled_file_name}", '1') do
+            File.write "#{file_dir}/#{enabled_file_name}", "1\n"
+          end
       end
 
       it 'sets mode to manual by writing 1 to' do
-        expect { amdgpu_service.fan_speed = value }.to change { File.read("#{file_dir}/#{enabled_file_name}") }.to "1\n"
+        expect { amdgpu_service.fan_speed = value }
+          .to change { File.read("#{file_dir}/#{enabled_file_name}") }
+          .to "1\n"
       end
 
       it 'writes the proper raw fan speed' do
-        expect { amdgpu_service.fan_speed = value }.to change { File.read("#{file_dir}/#{file_name}") }.to "64\n"
+        expect { amdgpu_service.fan_speed = value }
+          .to change { File.read("#{file_dir}/#{file_name}") }
+          .to "64\n"
       end
     end
   end

@@ -133,7 +133,7 @@ class AmdgpuFanCli < Thor
   end
 
   def mem_total_mibibyes
-    "#{amdgpu_service.memory_total / (2 ** 20)} MiB"
+    "#{amdgpu_service.memory_total / (2**20)} MiB"
   end
 
   def percent_meter(percent, length = 10)
