@@ -143,7 +143,7 @@ class AmdgpuFanCli < Thor
   end
 
   def radeon_logo
-    File.read(File.join(__dir__, '../lib/radeon_r_black_red_100x100.ascii'))
+    File.read(File.join(__dir__, '../assets/radeon_r_black_red_100x100.ascii'))
   end
 
   def summary_clock
