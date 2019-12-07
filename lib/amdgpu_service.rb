@@ -180,7 +180,7 @@ class AmdgpuService
   end
 
   def valid_fan_raw_speed?(raw)
-    (fan_speed_raw_min.to_i..fan_speed_raw_max.to_i).cover?(raw.to_i)
+    !raw.nil? && (fan_speed_raw_min.to_i..fan_speed_raw_max.to_i).cover?(raw.to_i)
   end
 
   def valid_fan_percent_speed?(percent)

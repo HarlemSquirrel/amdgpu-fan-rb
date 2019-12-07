@@ -142,17 +142,45 @@ RSpec.describe AmdgpuService do
     end
   end
 
-  describe '#set_fan_manual_speed!' do
+  describe '#fan_speed=' do
     let(:error) { described_class::Error }
-    let(:file_contents) { '255' }
-    let(:file_name) { 'pwm1_max' }
+    let(:file_contents) { '' }
+    let(:file_name) { 'pwm1' }
+    let(:enable_file_contents) { '2' }
+    let(:enabled_file_name) { 'pwm1_enable' }
+    let(:max_file_name) { 'pwm1_max' }
+    let(:max_file_contents) { "255\n" }
+    let(:min_file_name) { 'pwm1_max' }
+    let(:min_file_contents) { "0\n" }
 
     before do
+      File.write("#{file_dir}/#{min_file_name}", min_file_contents)
+      File.write("#{file_dir}/#{max_file_name}", max_file_contents)
+      File.write("#{file_dir}/#{enabled_file_name}", enable_file_contents)
       File.write("#{file_dir}/#{file_name}", file_contents)
     end
 
     context 'with no percent or raw provided' do
-      it { expect { amdgpu_service.set_fan_manual_speed! }.to raise_error error }
+      it { expect { amdgpu_service.fan_speed = nil }.to raise_error error }
+    end
+
+    context 'when a valid percentage is given' do
+      let(:value) { 25 }
+
+      before do
+        allow(amdgpu_service).to receive(:sudo_write)
+                             .with("#{file_dir}/#{file_name}", 64) { File.write "#{file_dir}/#{file_name}", "64\n" }
+        allow(amdgpu_service).to receive(:sudo_write)
+                             .with("#{file_dir}/#{enabled_file_name}", "1") { File.write "#{file_dir}/#{enabled_file_name}", "1\n"}
+      end
+
+      it 'sets mode to manual by writing 1 to' do
+        expect { amdgpu_service.fan_speed = value }.to change { File.read("#{file_dir}/#{enabled_file_name}") }.to "1\n"
+      end
+
+      it 'writes the proper raw fan speed' do
+        expect { amdgpu_service.fan_speed = value }.to change { File.read("#{file_dir}/#{file_name}") }.to "64\n"
+      end
     end
   end
 
