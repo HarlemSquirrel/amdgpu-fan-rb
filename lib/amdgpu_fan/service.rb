@@ -58,7 +58,7 @@ module AmdgpuFan
     end
 
     def fan_speed_rpm
-      File.read(fan_input_file).strip
+      File.read(fan_file(:input)).strip
     end
 
     def memory_clock
@@ -86,7 +86,7 @@ module AmdgpuFan
     end
 
     def power_max
-      @power_max ||= power_raw_to_watts File.read(power_max_file)
+      @power_max ||= power_raw_to_watts File.read("#{base_hwmon_dir}/power1_cap")
     end
 
     def profile_auto
@@ -120,6 +120,10 @@ module AmdgpuFan
       @base_card_dir ||= "#{BASE_FOLDER}/card#{card_num}/device"
     end
 
+    def base_hwmon_dir
+      @base_hwmon_dir ||= "#{base_card_dir}/hwmon/hwmon#{card_num}"
+    end
+
     def clock_from_pp_file(file)
       File.read(file).slice(/\w+(?= \*)/)
     end
@@ -128,16 +132,17 @@ module AmdgpuFan
       @connectors_files ||= Dir["/sys/class/drm/card#{card_num}*/status"].sort
     end
 
-    def fan_input_file
-      @fan_input_file ||= Dir.glob("#{base_card_dir}/**/fan1_input").first
+    def fan_file(type)
+      @fan_file ||= {}
+      @fan_file[type] ||= "#{base_hwmon_dir}/fan1_#{type}"
     end
 
     def fan_mode_file
-      @fan_mode_file ||= Dir.glob("#{base_card_dir}/**/pwm1_enable").first
+      @fan_mode_file ||= "#{base_hwmon_dir}/pwm1_enable"
     end
 
     def fan_power_file
-      @fan_power_file ||= Dir.glob("#{base_card_dir}/**/pwm1").first
+      @fan_power_file ||= "#{base_hwmon_dir}/pwm1"
     end
 
     def fan_speed_raw
@@ -159,10 +164,6 @@ module AmdgpuFan
 
     def power_avg_file
       @power_avg_file ||= Dir.glob("#{base_card_dir}/**/power1_average").first
-    end
-
-    def power_max_file
-      @power_max_file ||= Dir.glob("#{base_card_dir}/**/power1_cap").first
     end
 
     def power_raw_to_watts(raw_string)

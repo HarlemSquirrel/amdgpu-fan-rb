@@ -30,6 +30,7 @@ RSpec.describe AmdgpuFan::Service do
 
   describe '#fan_mode' do
     let(:file_name) { 'pwm1_enable' }
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
 
     before do
       File.write("#{file_dir}/#{file_name}", file_contents)
@@ -49,6 +50,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#fan_speed_percent' do
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1' }
     let(:file_contents) { rand(255) }
     let(:percent) { (file_contents / 255.0 * 100).round }
@@ -111,6 +113,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#power_max' do
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'power1_cap' }
     let(:file_contents) { 300_000_000 }
 
@@ -122,6 +125,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   xdescribe '#set_mode!' do
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1_enable' }
     let(:file_path) { "#{file_dir}/#{file_name}" }
 
@@ -145,6 +149,7 @@ RSpec.describe AmdgpuFan::Service do
   describe '#fan_speed=' do
     let(:error) { described_class::Error }
     let(:file_contents) { '' }
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1' }
     let(:enable_file_contents) { '2' }
     let(:enabled_file_name) { 'pwm1_enable' }
