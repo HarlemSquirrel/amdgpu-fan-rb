@@ -2,4 +2,7 @@
 
 require 'thor'
 
-require_relative '../lib/amdgpu_service'
+require_relative '../lib/amdgpu_fan'
+require_relative '../lib/amdgpu_fan/service'
+require_relative '../lib/amdgpu_fan/mixin/cli_output_format'
+require_relative '../lib/amdgpu_fan/cli'

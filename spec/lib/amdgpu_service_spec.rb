@@ -2,10 +2,10 @@
 
 require 'fileutils'
 
-require_relative '../../lib/amdgpu_service'
+require_relative '../../lib/amdgpu_fan/service'
 require_relative '../spec_helper'
 
-RSpec.describe AmdgpuService do
+RSpec.describe AmdgpuFan::Service do
   BASE_DIR = File.expand_path('../../tmp', __dir__)
 
   let(:amdgpu_service) { described_class.new }
