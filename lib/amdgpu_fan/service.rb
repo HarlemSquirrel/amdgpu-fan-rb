@@ -121,7 +121,7 @@ module AmdgpuFan
     end
 
     def base_hwmon_dir
-      @base_hwmon_dir ||= "#{base_card_dir}/hwmon/hwmon#{card_num}"
+      @base_hwmon_dir ||= Dir.glob("#{base_card_dir}/hwmon/hwmon*").first
     end
 
     def clock_from_pp_file(file)
