@@ -47,12 +47,15 @@ Commands:
   amdgpu_fan watch [SECONDS]            # Watch fan speed, load, power, and temperature refreshed every n seconds.
   amdgpu_fan watch_csv [SECONDS]        # Watch stats in CSV format refreshed every n seconds defaulting to 1 second.
 
-➤  amdgpu_fan status
-📺	GPU:   AMD Radeon (TM) R9 Fury Series
-📄	vBIOS: 113-C8800100-102
-🌀	Fan:   auto mode running at 48% ~ 1828 rpm
-🌡	Temp:  28.0°C
-⚡	Power: 19.26 / 300.0 Watts
+➤  bin/amdgpu_fan status
+📺 GPU:    Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO
+📄 vBIOS:  113-C8800100-102
+⏰ Clocks: 724Mhz Core, 500Mhz Memory
+💾 Memory: 4096 MiB
+🌀 Fan:    auto mode running at 1809 rpm (48%)
+🌞 Temp:   21.0°C
+⚡ Power:  3D_FULL_SCREEN profile in performance mode using 16.2 / 300.0 Watts (5%)
+⚖  Load:   [                    ]0%
 
 ➤  bin/amdgpu_fan watch 3
 Watching Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO every 3 second(s)...
