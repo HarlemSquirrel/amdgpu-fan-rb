@@ -54,6 +54,7 @@ class AmdgpuFanCli < Thor
     puts "📺 #{'GPU:'.ljust(7)} #{amdgpu_service.name}",
          "📄 #{'vBIOS:'.ljust(7)} #{amdgpu_service.vbios_version}",
          "⏰ #{'Clocks:'.ljust(7)} #{clock_status}",
+         "💾 #{'Memory:'.ljust(7)} #{mem_total_mibibyes}",
          "🌀 #{'Fan:'.ljust(7)} #{fan_status}",
          "🌞 #{'Temp:'.ljust(7)} #{amdgpu_service.temperature}°C",
          "⚡ #{'Power:'.ljust(7)} #{amdgpu_service.profile_mode} profile in " \
@@ -129,6 +130,10 @@ class AmdgpuFanCli < Thor
   def fan_status
     "#{amdgpu_service.fan_mode} mode running at " \
      "#{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%)"
+  end
+
+  def mem_total_mibibyes
+    "#{amdgpu_service.memory_total / (2 ** 20)} MiB"
   end
 
   def percent_meter(percent, length = 10)

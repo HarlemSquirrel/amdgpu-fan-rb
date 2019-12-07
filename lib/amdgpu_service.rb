@@ -35,7 +35,7 @@ class AmdgpuService
   end
 
   def fan_mode=(mode)
-    `echo "#{FAN_MODES.key(mode.to_s)}" | sudo tee #{fan_mode_file}`
+    sudo_write fan_mode_file, FAN_MODES.key(mode.to_s)
   end
 
   def fan_speed=(value)
@@ -49,7 +49,7 @@ class AmdgpuService
 
     self.fan_mode = :manual unless fan_mode == 'manual'
 
-    `echo "#{new_raw}" | sudo tee #{fan_power_file}`
+    sudo_write fan_power_file, new_raw
   end
 
   def fan_speed_percent
@@ -70,6 +70,10 @@ class AmdgpuService
 
   def memory_clock
     clock_from_pp_file "#{base_card_folder}/pp_dpm_mclk"
+  end
+
+  def memory_total
+    File.read("#{base_card_folder}/mem_info_vram_total").to_i
   end
 
   def name
@@ -93,12 +97,12 @@ class AmdgpuService
   end
 
   def profile_auto
-    `echo "auto" | sudo tee "#{base_card_folder}/power_dpm_force_performance_level"`
+    sudo_write "#{base_card_folder}/power_dpm_force_performance_level", 'auto'
   end
 
   def profile_force=(state)
-    `echo "manual" | sudo tee "#{base_card_folder}/power_dpm_force_performance_level"`
-    `echo "#{state}" | sudo tee "#{base_card_folder}/pp_power_profile_mode"`
+    sudo_write "#{base_card_folder}/power_dpm_force_performance_level", 'manual'
+    sudo_write "#{base_card_folder}/pp_power_profile_mode", state
   end
 
   def profile_mode
@@ -165,6 +169,10 @@ class AmdgpuService
 
   def power_raw_to_watts(raw_string)
     (raw_string.strip.to_f / 1_000_000).round(2)
+  end
+
+  def sudo_write(file_path, value)
+    `echo "#{value}" | sudo tee #{file_path}`
   end
 
   def temperature_file
