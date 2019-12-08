@@ -90,6 +90,7 @@ RSpec.describe AmdgpuFan::Service do
   describe '#power_draw' do
     let(:file_name) { 'power1_average' }
     let(:file_contents) { 52_210_000 }
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
 
     before do
       File.write("#{file_dir}/#{file_name}", file_contents)
@@ -99,6 +100,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#power_draw_percent' do
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
     let(:power_avg_file_name) { 'power1_average' }
     let(:power_avg_file_contents) { 52_210_000 }
     let(:power_cap_file_name) { 'power1_cap' }
