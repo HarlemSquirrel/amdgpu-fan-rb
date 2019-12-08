@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'mixin/fan'
 require_relative 'mixin/sys_write'
+
+require_relative 'connector'
 
 module AmdgpuFan
   ## AmdgpuService
@@ -8,6 +11,7 @@ module AmdgpuFan
   # A service class for reading and interacting with AMD radeon graphics cards
   # through the amdgpu Linux kernel driver.
   class Service
+    include Fan
     include SysWrite
 
     BASE_FOLDER = '/sys/class/drm'
@@ -25,10 +29,8 @@ module AmdgpuFan
       File.read("#{base_card_dir}/gpu_busy_percent").strip
     end
 
-    def connectors_status
-      connectors_files.each_with_object({}) do |f, connectors|
-        connectors[f.slice(/(?<=card0-)(\w|-)+/)] = File.read(f).strip
-      end
+    def connectors
+      @connectors ||= Connector.where card_num: card_num
     end
 
     def core_clock
@@ -132,32 +134,6 @@ module AmdgpuFan
       File.read(file).slice(/\w+(?= \*)/)
     end
 
-    def connectors_files
-      @connectors_files ||= Dir["/sys/class/drm/card#{card_num}*/status"].sort
-    end
-
-    def fan_file(type)
-      @fan_file ||= {}
-      @fan_file[type] ||= "#{base_hwmon_dir}/fan1_#{type}"
-    end
-
-    def fan_mode_file
-      @fan_mode_file ||= "#{base_hwmon_dir}/pwm1_enable"
-    end
-
-    def fan_power_file
-      @fan_power_file ||= "#{base_hwmon_dir}/pwm1"
-    end
-
-    def fan_speed_raw
-      File.read(fan_power_file).strip
-    end
-
-    def fan_raw_speeds(type)
-      @fan_raw_speeds ||= {}
-      @fan_raw_speeds[type] ||= File.read(Dir.glob("#{base_card_dir}/**/pwm1_#{type}").first).to_i
-    end
-
     def gpu_pci_id
       @gpu_pci_id ||= `lspci -v | grep VGA`.split(' ').first
     end
@@ -176,14 +152,6 @@ module AmdgpuFan
 
     def temperature_file
       @temperature_file ||= Dir.glob("#{base_card_dir}/**/temp1_input").first
-    end
-
-    def valid_fan_raw_speed?(raw)
-      !raw.nil? && (fan_raw_speeds(:min)..fan_raw_speeds(:max)).cover?(raw.to_i)
-    end
-
-    def valid_fan_percent_speed?(percent)
-      (1..100.to_i).cover?(percent.to_i)
     end
   end
 end

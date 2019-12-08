@@ -9,8 +9,8 @@ module AmdgpuFan
 
     desc 'connectors', 'View the status of the display connectors.'
     def connectors
-      amdgpu_service.connectors_status.each do |connector, status|
-        puts "#{connector}: #{status}"
+      amdgpu_service.connectors.each do |connector|
+        puts "#{connector.type} #{connector.index}:\t#{connector.status}"
       end
     end
 
