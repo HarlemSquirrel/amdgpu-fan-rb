@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
+require_relative 'mixin/sys_write'
+
 module AmdgpuFan
   ## AmdgpuService
   #
   # A service class for reading and interacting with AMD radeon graphics cards
   # through the amdgpu Linux kernel driver.
   class Service
+    include SysWrite
+
     BASE_FOLDER = '/sys/class/drm'
     FAN_MODES = { '1' => 'manual', '2' => 'auto' }.freeze
 
@@ -168,10 +172,6 @@ module AmdgpuFan
 
     def power_raw_to_watts(raw_string)
       (raw_string.strip.to_f / 1_000_000).round(2)
-    end
-
-    def sudo_write(file_path, value)
-      `echo "#{value}" | sudo tee #{file_path}`
     end
 
     def temperature_file
