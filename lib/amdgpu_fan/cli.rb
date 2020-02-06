@@ -147,8 +147,8 @@ module AmdgpuFan
     end
 
     def summary_power
-      power_string = "#{amdgpu_service.power_draw} W".ljust(amdgpu_service.power_max.length + 3)
-      "Power: #{power_string} #{percent_meter amdgpu_service.power_draw_percent}"
+      "Power: #{amdgpu_service.power_draw.to_s.rjust(amdgpu_service.power_max.to_s.length + 1)} W" \
+        "#{percent_meter amdgpu_service.power_draw_percent}"
     end
 
     def summary_temp
