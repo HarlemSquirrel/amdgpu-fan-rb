@@ -10,7 +10,8 @@ module AmdgpuFan
     desc 'connectors', 'View the status of the display connectors.'
     def connectors
       amdgpu_service.connectors.each do |connector|
-        puts "#{connector.type} #{connector.index}:\t#{connector.status}"
+        puts "#{connector.type} #{connector.index}:\t#{connector.status}" \
+             "    #{connector.display_name}".chomp
       end
     end
 
@@ -51,7 +52,8 @@ module AmdgpuFan
     desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
     def status(option = nil)
       puts radeon_logo if option == '--logo'
-      puts "📺 #{'GPU:'.ljust(7)} #{amdgpu_service.name}",
+      puts "Displays: #{amdgpu_service.connectors.map(&:display_name).compact.join(',')}",
+           "📺 #{'GPU:'.ljust(7)} #{amdgpu_service.name}",
            "📄 #{'vBIOS:'.ljust(7)} #{amdgpu_service.vbios_version}",
            "⏰ #{'Clocks:'.ljust(7)} #{clock_status}",
            "💾 #{'Memory:'.ljust(7)} #{mem_total_mibibyes}",

@@ -5,6 +5,12 @@ module AmdgpuFan
   #
   # A model class for a GPU connector
   class Connector
+    EDID_DESCRIPTORS_CONF = {
+      display_descriptor_leading_bytes: String.new('\x00\xFC\x00', encoding: 'ascii-8bit'),
+      index_range: (54..125)
+    }.freeze
+
+
     attr_reader :card_num, :dir_path, :index, :type
 
     class << self
@@ -28,8 +34,23 @@ module AmdgpuFan
       @type = type
     end
 
+    def display_name
+      return if edid.to_s.empty?
+
+      edid.slice(EDID_DESCRIPTORS_CONF[:index_range])
+          .scan(/(?<=#{EDID_DESCRIPTORS_CONF[:display_descriptor_leading_bytes]}).{1,13}/)
+          .first
+          .strip
+    end
+
     def status
       File.read(File.join(dir_path, 'status')).strip
+    end
+
+    private
+
+    def edid
+      File.read("#{dir_path}/edid", encoding: 'ascii-8bit')
     end
   end
 end
