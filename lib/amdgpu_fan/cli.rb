@@ -52,18 +52,18 @@ module AmdgpuFan
     desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
     def status(option = nil)
       puts radeon_logo if option == '--logo'
-      puts "Displays: #{amdgpu_service.connectors.map(&:display_name).compact.join(',')}",
-           "📺 #{'GPU:'.ljust(7)} #{amdgpu_service.name}",
-           "📄 #{'vBIOS:'.ljust(7)} #{amdgpu_service.vbios_version}",
-           "⏰ #{'Clocks:'.ljust(7)} #{clock_status}",
-           "💾 #{'Memory:'.ljust(7)} #{mem_total_mibibyes}",
-           "🌀 #{'Fan:'.ljust(7)} #{fan_status}",
-           "🌞 #{'Temp:'.ljust(7)} #{amdgpu_service.temperature}°C",
-           "⚡ #{'Power:'.ljust(7)} #{amdgpu_service.profile_mode} profile in " \
+      puts "👾 #{'GPU:'.ljust(9)} #{amdgpu_service.name}",
+           "📄 #{'vBIOS:'.ljust(9)} #{amdgpu_service.vbios_version}",
+           "📺 Displays: #{amdgpu_service.connectors.map(&:display_name).compact.join(',')}",
+           "⏰ #{'Clocks:'.ljust(9)} #{clock_status}",
+           "💾 #{'Memory:'.ljust(9)} #{mem_total_mibibyes}",
+           "🌀 #{'Fan:'.ljust(9)} #{fan_status}",
+           "🌞 #{'Temp:'.ljust(9)} #{amdgpu_service.temperature}°C",
+           "⚡ #{'Power:'.ljust(9)} #{amdgpu_service.profile_mode} profile in " \
             "#{amdgpu_service.power_dpm_state} mode using " \
             "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
             "(#{amdgpu_service.power_draw_percent}%)",
-           "⚖  #{'Load:'.ljust(7)} #{percent_meter amdgpu_service.busy_percent, 20}"
+           "⚖  #{'Load:'.ljust(9)} #{percent_meter amdgpu_service.busy_percent, 20}"
     end
 
     desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
