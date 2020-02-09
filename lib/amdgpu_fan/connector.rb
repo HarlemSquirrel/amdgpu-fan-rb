@@ -34,6 +34,10 @@ module AmdgpuFan
       @type = type
     end
 
+    def connected?
+      status.casecmp('connected').zero?
+    end
+
     def display_name
       return if edid.to_s.empty?
 
