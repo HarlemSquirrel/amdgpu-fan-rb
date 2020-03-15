@@ -14,7 +14,7 @@ module AmdgpuFan
 
     def percent_meter(percent, length = 10)
       progress_bar_count = (length * percent.to_f / 100).round
-      percent_string = "#{percent}%".ljust(4)
+      percent_string = "#{format '%<num>0.2i', num: percent}%".ljust(3)
       "[#{METER_CHAR * progress_bar_count}#{' ' * (length - progress_bar_count)}]#{percent_string}"
     end
 

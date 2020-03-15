@@ -134,13 +134,17 @@ module AmdgpuFan
       "#{amdgpu_service.memory_total / (2**20)} MiB"
     end
 
+    def power_max
+      format('%<num>0.2f', num: amdgpu_service.power_max)
+    end
+
     def summary_clock
-      "Core: #{amdgpu_service.core_clock.ljust(7)} #{WATCH_FIELD_SEPARATOR}"\
-        "Memory: #{amdgpu_service.memory_clock.ljust(7)}"
+      "Core: #{amdgpu_service.core_clock.rjust(7)}#{WATCH_FIELD_SEPARATOR}"\
+        "Memory: #{amdgpu_service.memory_clock.rjust(7)}"
     end
 
     def summary_fan
-      fan_speed_string = "#{amdgpu_service.fan_speed_rpm} rpm".ljust(8)
+      fan_speed_string = "#{amdgpu_service.fan_speed_rpm} rpm".rjust(8)
       "Fan: #{fan_speed_string} #{percent_meter(amdgpu_service.fan_speed_percent)}"
     end
 
@@ -149,12 +153,12 @@ module AmdgpuFan
     end
 
     def summary_power
-      "Power: #{amdgpu_service.power_draw.to_s.rjust(amdgpu_service.power_max.to_s.length + 1)} W" \
-        "#{percent_meter amdgpu_service.power_draw_percent}"
+      "Power: #{format('%<num>0.02f', num: amdgpu_service.power_draw).rjust(power_max.length)} W" \
+        " #{percent_meter amdgpu_service.power_draw_percent}"
     end
 
     def summary_temp
-      temp_string = "#{amdgpu_service.temperature}°C".ljust(7)
+      temp_string = "#{amdgpu_service.temperature}°C".rjust(7)
       "Temp: #{temp_string}"
     end
   end
