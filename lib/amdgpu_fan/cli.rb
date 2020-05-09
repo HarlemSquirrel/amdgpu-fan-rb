@@ -54,7 +54,7 @@ module AmdgpuFan
       puts radeon_logo if option == '--logo'
       puts "👾 #{'GPU:'.ljust(9)} #{amdgpu_service.name}",
            "📄 #{'vBIOS:'.ljust(9)} #{amdgpu_service.vbios_version}",
-           "📺 Displays: #{amdgpu_service.connectors.map(&:display_name).compact.join(',')}",
+           "📺 Displays: #{amdgpu_service.connectors.map(&:display_name).compact.join(', ')}",
            "⏰ #{'Clocks:'.ljust(9)} #{clock_status}",
            "💾 #{'Memory:'.ljust(9)} #{mem_total_mibibyes}",
            "🌀 #{'Fan:'.ljust(9)} #{fan_status}",

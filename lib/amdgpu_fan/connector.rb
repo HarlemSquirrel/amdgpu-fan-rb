@@ -6,7 +6,8 @@ module AmdgpuFan
   # A model class for a GPU connector
   class Connector
     EDID_DESCRIPTORS_CONF = {
-      display_descriptor_leading_bytes: String.new('\x00\xFC\x00', encoding: 'ascii-8bit'),
+      display_name_leading_bytes: String.new('\x00\xFC\x00', encoding: 'ascii-8bit'),
+      unspecified_text_leading_bytes: String.new('\x00\xFE\x00', encoding: 'ascii-8bit'),
       index_range: (54..125)
     }.freeze
 
@@ -22,7 +23,7 @@ module AmdgpuFan
           Connector.new card_num: card_num,
                         dir_path: dir_path,
                         index: dir_path[-1],
-                        type: dir_path.slice(/(?<=card#{card_num}-)[A-Z]+/)
+                        type: dir_path.slice(/(?<=card#{card_num}-)[A-z]+/)
         end
       end
     end
@@ -41,10 +42,7 @@ module AmdgpuFan
     def display_name
       return if edid.to_s.empty?
 
-      edid.slice(EDID_DESCRIPTORS_CONF[:index_range])
-          .scan(/(?<=#{EDID_DESCRIPTORS_CONF[:display_descriptor_leading_bytes]}).{1,13}/)
-          .first
-          .strip
+      (display_name_text + unspecified_text).join(' ').strip
     end
 
     def status
@@ -53,8 +51,22 @@ module AmdgpuFan
 
     private
 
+    def display_descriptors_raw
+      edid.slice EDID_DESCRIPTORS_CONF[:index_range]
+    end
+
+    def display_name_text
+      display_descriptors_raw
+        .scan(/(?<=#{EDID_DESCRIPTORS_CONF[:display_name_leading_bytes]}).{1,13}/)
+    end
+
     def edid
       File.read("#{dir_path}/edid", encoding: 'ascii-8bit')
+    end
+
+    def unspecified_text
+      display_descriptors_raw
+        .scan(/(?<=#{EDID_DESCRIPTORS_CONF[:unspecified_text_leading_bytes]}).{1,13}/)
     end
   end
 end
