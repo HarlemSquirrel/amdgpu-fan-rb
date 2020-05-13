@@ -1,5 +1,6 @@
 # amdgpu_fan
 
+[![Gem Version](https://badge.fury.io/rb/amdgpu_fan.svg)](https://badge.fury.io/rb/amdgpu_fan)
 [![Build Status](https://travis-ci.org/HarlemSquirrel/amdgpu-fan-rb.svg?branch=master)](https://travis-ci.org/HarlemSquirrel/amdgpu-fan-rb) [![Maintainability](https://api.codeclimate.com/v1/badges/27233cee17ef6a2c14fd/maintainability)](https://codeclimate.com/github/HarlemSquirrel/amdgpu-fan-rb/maintainability)
 
 A Ruby CLI to read and set fan speed, power profiles, and more for AMD Radeon graphics cards running on the AMDGPU Linux driver.
