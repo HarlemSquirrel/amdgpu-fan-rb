@@ -14,4 +14,9 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/HarlemSquirrel/amdgpu-fan-rb'
   s.license     = 'MIT'
+
+  s.add_runtime_dependency 'thor', '~> 1.0'
+
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'rspec'
 end
