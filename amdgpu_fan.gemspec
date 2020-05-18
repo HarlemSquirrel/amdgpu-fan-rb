@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'lib/amdgpu_fan/version'
+
 Gem::Specification.new do |s|
   s.name        = 'amdgpu_fan'
-  s.version     = '0.5.2'
+  s.version     = AmdgpuFan::VERSION
   s.summary     =
     'A CLI to view and set fan speeds for AMD graphics cards running on the '\
     'open source amdgpu Linux driver'

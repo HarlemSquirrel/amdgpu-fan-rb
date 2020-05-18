@@ -66,6 +66,11 @@ module AmdgpuFan
            "⚖  #{'Load:'.ljust(9)} #{percent_meter amdgpu_service.busy_percent, 20}"
     end
 
+    desc 'version', 'Print the application version.'
+    def version
+      puts AmdgpuFan::VERSION
+    end
+
     desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
          'refreshed every n seconds.'
     def watch(seconds = 1)
