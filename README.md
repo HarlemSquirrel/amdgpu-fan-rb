@@ -80,3 +80,11 @@ And now the watch is ended.
 - [Ruby](https://www.ruby-lang.org) with [Bundler](https://bundler.io)
 - [Thor](http://whatisthor.com/) (installed with `bundle install`)
 - [`lspci`](https://linux.die.net/man/8/lspci) (included with most Linux distributions)
+
+## Building a binary
+
+[Ruby Packer](https://github.com/pmq20/ruby-packer) provides a convenient way to compile this into a single executable. For the best results, compile Ruby Packer from source from the lastest master branch.
+
+```sh
+rubyc amdgpu_fan --output amdgpu_fan
+```
