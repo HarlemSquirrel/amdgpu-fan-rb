@@ -29,6 +29,8 @@ RSpec.describe AmdgpuFan::Watcher do
       3: 945Mhz
     DOC
     File.write File.join(file_dir, 'hwmon/hwmon0/fan1_input'), 1207
+    File.write File.join(file_dir, 'hwmon/hwmon0/power1_average'), 8000000
+    File.write File.join(file_dir, 'hwmon/hwmon0/temp1_input'), 25000
   end
 
   describe '#measure' do
