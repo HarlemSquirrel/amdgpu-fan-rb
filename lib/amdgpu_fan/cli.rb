@@ -98,8 +98,7 @@ module AmdgpuFan
 
     desc 'watch_avg',
          <<~DOC
-           Watch min, man, and average fan speed, load, power, and temperature
-           refreshed every n seconds.
+           Watch min, max, average, and current stats.
          DOC
     def watch_avg
       puts "Watching #{amdgpu_service.name} min, max and averges since #{Time.now}...",
