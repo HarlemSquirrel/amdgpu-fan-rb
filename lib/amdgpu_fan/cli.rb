@@ -116,11 +116,11 @@ module AmdgpuFan
         watcher.measure
         5.times { print "\033[K\033[A" } # move up a line and clear to end of line
 
-        puts "⏰ Core clock  " + watcher.core_clock.map { |k,v| "#{k}: #{v} MHz ".ljust(16) }.join,
-             "💾 Memory clk  " + watcher.mem_clock.map { |k,v| "#{k}: #{v} MHz ".ljust(16) }.join,
-             "🌀 Fan speed   " + watcher.fan_speed.map { |k,v| "#{k}: #{v} RPM ".ljust(16) }.join,
-             "🔌 Power usage " + watcher.power.map { |k,v| "#{k}: #{v} W ".ljust(16) }.join,
-             "🌡  Temperature " + watcher.temp.map { |k,v| "#{k}: #{v}°C ".ljust(16) }.join
+        puts "⏰ Core clock  " + watcher.core_clock.to_s,
+             "💾 Memory clk  " + watcher.mem_clock.to_s,
+             "🌀 Fan speed   " + watcher.fan_speed.to_s,
+             "🔌 Power usage " + watcher.power.to_s,
+             "🌡  Temperature " + watcher.temp.to_s
         sleep 1
       end
     end
