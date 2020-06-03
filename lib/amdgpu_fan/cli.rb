@@ -96,6 +96,35 @@ module AmdgpuFan
       end
     end
 
+    desc 'watch_avg',
+         <<~DOC
+           Watch min, max, average, and current stats.
+         DOC
+    def watch_avg
+      puts "Watching #{amdgpu_service.name} min, max and averges since #{Time.now}...",
+           '  <Press Ctrl-C to exit>',
+           "\n\n\n\n\n"
+
+      trap 'SIGINT' do
+        puts "\nAnd now the watch is ended."
+        exit 0
+      end
+
+      watcher = Watcher.new amdgpu_service
+
+      loop do
+        watcher.measure
+        5.times { print "\033[K\033[A" } # move up a line and clear to end of line
+
+        puts "⏰ Core clock  " + watcher.core_clock.to_s,
+             "💾 Memory clk  " + watcher.mem_clock.to_s,
+             "🌀 Fan speed   " + watcher.fan_speed.to_s,
+             "🔌 Power usage " + watcher.power.to_s,
+             "🌡  Temperature " + watcher.temp.to_s
+        sleep 1
+      end
+    end
+
     desc 'watch_csv [SECONDS]', 'Watch stats in CSV format ' \
          'refreshed every n seconds defaulting to 1 second.'
     def watch_csv(seconds = 1)
