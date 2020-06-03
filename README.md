@@ -75,6 +75,20 @@ Watching Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO every 3 
 And now the watch is ended.
 ```
 
+```
+➤  bin/amdgpu_fan watch_avg
+Watching Sapphire Technology Limited Vega 10 XL/XT [Radeon RX Vega 56/64] min, max and averges since
+2020-06-02 23:05:20 -0400...
+  <Press Ctrl-C to exit>
+⏰ Core clock  min:    852 MHz avg:  887.0 MHz max:   1200 MHz now:    852 MHz
+💾 Memory clk  min:    167 MHz avg:  227.1 MHz max:    945 MHz now:    167 MHz
+🌀 Fan speed   min:   1231 RPM avg: 1231.0 RPM max:   1231 RPM now:   1231 RPM
+⚡ Power usage min:    6.0 W   avg:   21.8 W   max:  141.0 W   now:    6.0 W
+🌡  Temperature min:     30 °C  avg:   31.3 °C  max:     35 °C  now:     32 °C
+^C
+And now the watch is ended.
+```
+
 ## Dependencies
 
 - [Ruby](https://www.ruby-lang.org) with [Bundler](https://bundler.io)
