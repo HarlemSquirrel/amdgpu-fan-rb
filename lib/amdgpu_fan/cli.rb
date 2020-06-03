@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
 module AmdgpuFan
   # The command-line interface class
   class Cli < Thor
     include CliOutputFormat
 
+    ICONS = YAML.load(File.read(File.join(__dir__, '../../config/icons.yml')))
+                .transform_keys(&:to_sym).freeze
     WATCH_FIELD_SEPARATOR = ' | '
 
     desc 'connectors', 'View the status of the display connectors.'
@@ -52,18 +56,18 @@ module AmdgpuFan
     desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
     def status(option = nil)
       puts radeon_logo if option == '--logo'
-      puts "👾 #{'GPU:'.ljust(9)} #{amdgpu_service.name}",
-           "📄 #{'vBIOS:'.ljust(9)} #{amdgpu_service.vbios_version}",
-           "📺 Displays: #{amdgpu_service.connectors.map(&:display_name).compact.join(', ')}",
-           "⏰ #{'Clocks:'.ljust(9)} #{clock_status}",
-           "💾 #{'Memory:'.ljust(9)} #{mem_total_mibibyes}",
-           "🌀 #{'Fan:'.ljust(9)} #{fan_status}",
-           "🌞 #{'Temp:'.ljust(9)} #{amdgpu_service.temperature}°C",
-           "⚡ #{'Power:'.ljust(9)} #{amdgpu_service.profile_mode} profile in " \
+      puts ICONS[:gpu] + ' GPU:'.ljust(9) + amdgpu_service.name,
+           ICONS[:vbios]+ ' vBIOS:'.ljust(9) + amdgpu_service.vbios_version,
+           ICONS[:display]  + ' Displays:' + amdgpu_service.display_names.join(', '),
+           ICONS[:clock] + ' Clocks:'.ljust(9) + clock_status,
+           ICONS[:memory] + ' Memory:'.ljust(9) + mem_total_mibibyes,
+           ICONS[:fan] + ' Fan:'.ljust(9) + fan_status,
+           ICONS[:temp] + ' Temp:'.ljust(9) + "#{amdgpu_service.temperature}°C",
+           ICONS[:power] + ' Power:'.ljust(9) +  "#{amdgpu_service.profile_mode} profile in " \
             "#{amdgpu_service.power_dpm_state} mode using " \
             "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
             "(#{amdgpu_service.power_draw_percent}%)",
-           "⚖  #{'Load:'.ljust(9)} #{percent_meter amdgpu_service.busy_percent, 20}"
+           ICONS[:load] + ' Load:'.ljust(9) + percent_meter(amdgpu_service.busy_percent, 20)
     end
 
     desc 'version', 'Print the application version.'
@@ -116,11 +120,11 @@ module AmdgpuFan
         watcher.measure
         5.times { print "\033[K\033[A" } # move up a line and clear to end of line
 
-        puts "⏰ Core clock  " + watcher.core_clock.to_s,
-             "💾 Memory clk  " + watcher.mem_clock.to_s,
-             "🌀 Fan speed   " + watcher.fan_speed.to_s,
-             "🔌 Power usage " + watcher.power.to_s,
-             "🌡  Temperature " + watcher.temp.to_s
+        puts ICONS[:clock] +  ' Core clock  ' + watcher.core_clock.to_s,
+             ICONS[:memory] + ' Memory clk  ' + watcher.mem_clock.to_s,
+             ICONS[:fan] +    ' Fan speed   ' + watcher.fan_speed.to_s,
+             ICONS[:power] +  ' Power usage ' + watcher.power.to_s,
+             ICONS[:temp] +   ' Temperature ' + watcher.temp.to_s
         sleep 1
       end
     end

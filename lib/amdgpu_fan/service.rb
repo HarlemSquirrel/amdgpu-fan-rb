@@ -37,6 +37,10 @@ module AmdgpuFan
       clock_from_pp_file "#{base_card_dir}/pp_dpm_sclk"
     end
 
+    def display_names
+      connectors.map(&:display_name).compact
+    end
+
     def fan_mode
       FAN_MODES[File.read(fan_mode_file).strip] || 'unknown'
     end
