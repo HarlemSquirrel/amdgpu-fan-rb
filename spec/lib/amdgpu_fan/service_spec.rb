@@ -63,7 +63,19 @@ RSpec.describe AmdgpuFan::Service do
     it { expect(amdgpu_service.fan_speed_percent).to eq percent }
   end
 
-  describe '#name' do
+  describe '#model_id' do
+    let(:file_content) { '0xe37f' }
+    let(:file_name) { 'subsystem_device' }
+
+    before do
+      FileUtils.mkdir_p file_dir
+      File.write("#{file_dir}/#{file_name}", file_content)
+    end
+
+    it { expect(amdgpu_service.model_id).to eq 'E37F' }
+  end
+
+ describe '#name' do
     let(:name_string) { 'Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO' }
 
     before do

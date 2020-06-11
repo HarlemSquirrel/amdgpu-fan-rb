@@ -79,6 +79,10 @@ module AmdgpuFan
       File.read("#{base_card_dir}/mem_info_vram_total").to_i
     end
 
+    def model_id
+      @model_id ||= File.read(File.join(base_card_dir, '/subsystem_device')).gsub(/\A0x/, '').upcase
+    end
+
     def name
       lspci_subsystem.split(': ')[1].strip
     end
