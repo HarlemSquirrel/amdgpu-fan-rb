@@ -2,8 +2,8 @@
 
 require 'fileutils'
 
-require_relative '../../lib/amdgpu_fan/service'
-require_relative '../spec_helper'
+require_relative '../../../lib/amdgpu_fan/service'
+require_relative '../../spec_helper'
 
 RSpec.describe AmdgpuFan::Service do
   BASE_DIR = File.expand_path('../../tmp', __dir__)
