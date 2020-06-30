@@ -45,10 +45,16 @@ module AmdgpuFan
       FAN_MODES[File.read(fan_mode_file).strip] || 'unknown'
     end
 
+    ##
+    # Set the fan mode to auto or manual.
+    #
     def fan_mode=(mode)
       sudo_write fan_mode_file, FAN_MODES.key(mode.to_s)
     end
 
+    ##
+    # Set the fan speed to a percentage if <= 100 or a raw value
+    #
     def fan_speed=(value)
       if valid_fan_percent_speed?(value)
         new_raw = (value.to_f / 100 * fan_raw_speeds(:max).to_i).round
@@ -67,14 +73,23 @@ module AmdgpuFan
       (fan_speed_raw.to_f / fan_raw_speeds(:max).to_i * 100).round
     end
 
+    ##
+    # Return the fan speed in revolutions per minute
+    #
     def fan_speed_rpm
       File.read(fan_file(:input)).strip
     end
 
+    ##
+    # Return the current memory clock speed.
+    #
     def memory_clock
       clock_from_pp_file "#{base_card_dir}/pp_dpm_mclk"
     end
 
+    ##
+    # Return the total memory on the card in bytes
+    #
     def memory_total
       File.read("#{base_card_dir}/mem_info_vram_total").to_i
     end
