@@ -166,14 +166,6 @@ module AmdgpuFan
       @device_id ||= File.read(File.join(base_card_dir, 'device')).to_i(16)
     end
 
-    def gpu_pci_id
-      @gpu_pci_id ||= `lspci -v | grep VGA`.split(' ').first
-    end
-
-    def lspci_subsystem
-      @lspci_subsystem ||= `lspci -v -s #{gpu_pci_id} | grep "Subsystem:"`
-    end
-
     def power_avg_file
       @power_avg_file ||= Dir.glob("#{base_card_dir}/**/power1_average").first
     end
