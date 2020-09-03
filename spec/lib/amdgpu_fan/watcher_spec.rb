@@ -29,8 +29,8 @@ RSpec.describe AmdgpuFan::Watcher do
       3: 945Mhz
     DOC
     File.write File.join(file_dir, 'hwmon/hwmon0/fan1_input'), 1207
-    File.write File.join(file_dir, 'hwmon/hwmon0/power1_average'), 8000000
-    File.write File.join(file_dir, 'hwmon/hwmon0/temp1_input'), 25000
+    File.write File.join(file_dir, 'hwmon/hwmon0/power1_average'), 8_000_000
+    File.write File.join(file_dir, 'hwmon/hwmon0/temp1_input'), 25_000
   end
 
   describe '#measure' do
@@ -38,7 +38,6 @@ RSpec.describe AmdgpuFan::Watcher do
       let(:blanks) { { avg: nil, max: nil, min: nil, now: nil } }
       let(:core_stats) { 'min:    852 MHz avg:  852.0 MHz max:    852 MHz now:    852 MHz ' }
       let(:fan_stats) { 'min:   1207 RPM avg: 1207.0 RPM max:   1207 RPM now:   1207 RPM ' }
-
 
       it { expect { watcher.measure }.to change { watcher.core_clock.to_s }.to(core_stats) }
       it { expect { watcher.measure }.to change { watcher.fan_speed.to_s }.to(fan_stats) }

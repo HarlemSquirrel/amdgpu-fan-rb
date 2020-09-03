@@ -47,8 +47,8 @@ module AmdgpuFan
 
       stat_set.min = stat_set.now if stat_set.now < stat_set.min
       stat_set.avg =
-       ((stat_set.now + stat_set.avg * (num_measurements - 1)) / num_measurements.to_f)
-         .round(1)
+        ((stat_set.now + stat_set.avg * (num_measurements - 1)) / num_measurements.to_f)
+        .round(1)
       stat_set.max = stat_set.now if stat_set.now > stat_set.max
     end
   end

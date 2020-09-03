@@ -15,8 +15,14 @@ module AmdgpuFan
     ##
     # Return the device name if available
     #
-    def self.device_name(vendor_id:, device_id:)
-      info.dig vendor_id, :devices, device_id, :name
+    def self.device_name(vendor_id, device_id, subdevice_id)
+      device = info.dig vendor_id, :devices, device_id
+
+      device.dig(subdevice_id, :name) || device[:name]
+    end
+
+    def self.vendor_name(vendor_id)
+      info.dig vendor_id, :name
     end
 
     def self.info
@@ -28,18 +34,18 @@ module AmdgpuFan
 
         # Vendor line
         if line.start_with?(/(\d|[a-z])/)
-          current_vendor_id = line.split('  ').first
+          current_vendor_id = line.split('  ').first.to_i(16)
           vendor_name = line.split('  ').last.strip
           hash[current_vendor_id] = { name: vendor_name, devices: {} }
         # Device line
         elsif line.start_with?(/\t\w/)
-          current_device_id = line.split('  ').first.strip
+          current_device_id = line.split('  ').first.to_i(16)
           device_name = line.split('  ').last.strip
           hash[current_vendor_id][:devices][current_device_id] = { name: device_name }
         elsif line.start_with?(/\t\t\w/)
-          subvendor_id = line.split(' ').first
-          subdevice_id = line.split(' ')[1]
-          subdevice_name = line.split('  ')[1]
+          subvendor_id = line.split(' ').first.to_i(16)
+          subdevice_id = line.split(' ')[1].to_i(16)
+          subdevice_name = line.split('  ')[1].strip
           hash[current_vendor_id][:devices][current_device_id][subdevice_id] =
             { name: subdevice_name }
         end
@@ -53,4 +59,3 @@ module AmdgpuFan
     end
   end
 end
-

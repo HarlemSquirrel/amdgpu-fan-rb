@@ -75,11 +75,13 @@ RSpec.describe AmdgpuFan::Service do
     it { expect(amdgpu_service.model_id).to eq 'E37F' }
   end
 
- describe '#name' do
+  describe '#name' do
     let(:name_string) { 'Advanced Micro Devices, Inc. [AMD/ATI] Radeon R9 FURY X / NANO' }
 
     before do
-      allow(amdgpu_service).to receive(:lspci_subsystem).and_return("	Subsystem: #{name_string}")
+      File.write("#{file_dir}/device", '0x7300')
+      File.write("#{file_dir}/subsystem_device", '0x0b36')
+      File.write("#{file_dir}/vendor", '0x1002')
     end
 
     it { expect(amdgpu_service.name).to eq name_string }

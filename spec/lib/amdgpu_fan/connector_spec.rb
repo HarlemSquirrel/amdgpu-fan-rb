@@ -5,7 +5,7 @@ require 'spec_helper'
 
 RSpec.describe AmdgpuFan::Connector do
   let(:connector) { described_class.new card_num: 0, dir_path: dir_path, index: 1, type: type }
-  
+
   describe '#display_name' do
     context 'with a AUO B173HAN03.2 display on DP 1' do
       let(:dir_path) { File.expand_path '../../fixtures/AUO_B173HAN03.2/card0-eDP-1', __dir__ }
@@ -30,6 +30,4 @@ RSpec.describe AmdgpuFan::Connector do
       it { expect(connector.display_name).to eq 'DP_FREESYNC' }
     end
   end
-
 end
- 

@@ -7,7 +7,7 @@ module AmdgpuFan
   class Cli < Thor
     include CliOutputFormat
 
-    ICONS = YAML.load(File.read(File.join(__dir__, '../../config/icons.yml')))
+    ICONS = YAML.safe_load(File.read(File.join(__dir__, '../../config/icons.yml')))
                 .transform_keys(&:to_sym).freeze
     WATCH_FIELD_SEPARATOR = ' | '
 
@@ -57,13 +57,13 @@ module AmdgpuFan
     def status(option = nil)
       puts radeon_logo if option == '--logo'
       puts ICONS[:gpu] + ' GPU:'.ljust(9) + amdgpu_service.name,
-           ICONS[:vbios]+ ' vBIOS:'.ljust(9) + amdgpu_service.vbios_version,
-           ICONS[:display]  + ' Displays:' + amdgpu_service.display_names.join(', '),
+           ICONS[:vbios] + ' vBIOS:'.ljust(9) + amdgpu_service.vbios_version,
+           ICONS[:display] + ' Displays:' + amdgpu_service.display_names.join(', '),
            ICONS[:clock] + ' Clocks:'.ljust(9) + clock_status,
            ICONS[:memory] + ' Memory:'.ljust(9) + mem_total_mibibyes,
            ICONS[:fan] + ' Fan:'.ljust(9) + fan_status,
            ICONS[:temp] + ' Temp:'.ljust(9) + "#{amdgpu_service.temperature}°C",
-           ICONS[:power] + ' Power:'.ljust(9) +  "#{amdgpu_service.profile_mode} profile in " \
+           ICONS[:power] + ' Power:'.ljust(9) + "#{amdgpu_service.profile_mode} profile in " \
             "#{amdgpu_service.power_dpm_state} mode using " \
             "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
             "(#{amdgpu_service.power_draw_percent}%)",

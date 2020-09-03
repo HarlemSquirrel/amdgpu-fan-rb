@@ -11,7 +11,6 @@ module AmdgpuFan
       index_range: (54..125)
     }.freeze
 
-
     attr_reader :card_num, :dir_path, :index, :type
 
     class << self

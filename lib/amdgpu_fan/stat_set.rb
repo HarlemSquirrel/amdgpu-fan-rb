@@ -18,7 +18,7 @@ module AmdgpuFan
     # Return a string containing all the stats with units.
     #
     def to_s
-      stats.map { |k,v| "#{k}: #{v.to_s.rjust(6)} #{unit.ljust(3)} " }.join
+      stats.map { |k, v| "#{k}: #{v.to_s.rjust(6)} #{unit.ljust(3)} " }.join
     end
   end
 end

@@ -4,7 +4,6 @@ module AmdgpuFan
   ##
   # A mixin to read fan details and validate input
   module Fan
-
     private
 
     def fan_file(type)

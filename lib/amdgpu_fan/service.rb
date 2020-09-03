@@ -4,6 +4,7 @@ require_relative 'mixin/fan'
 require_relative 'mixin/sys_write'
 
 require_relative 'connector'
+require_relative 'pci'
 
 module AmdgpuFan
   ## AmdgpuService
@@ -99,7 +100,11 @@ module AmdgpuFan
     end
 
     def name
-      PCI.device_name(vendor_id: vendor_id.to_s(16), device_id: device_id.to_s(16)) || 'unknown'
+      return 'Unknown' unless PCI.vendor_name(vendor_id)
+
+      [PCI.vendor_name(vendor_id),
+       PCI.device_name(vendor_id, device_id, subdevice_id) || 'unknown']
+        .join(' ')
     end
 
     def power_dpm_state
@@ -175,6 +180,10 @@ module AmdgpuFan
 
     def power_raw_to_watts(raw_string)
       (raw_string.strip.to_f / 1_000_000).round(2)
+    end
+
+    def subdevice_id
+      @subdevice_id ||= File.read(File.join(base_card_dir, 'subsystem_device')).to_i(16)
     end
 
     def temperature_file
