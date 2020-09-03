@@ -93,7 +93,7 @@ And now the watch is ended.
 
 - [Ruby](https://www.ruby-lang.org) with [Bundler](https://bundler.io)
 - [Thor](http://whatisthor.com/) (installed with `bundle install`)
-- [`lspci`](https://linux.die.net/man/8/lspci) (included with most Linux distributions)
+- Internet connection - Device info is retrieved from https://pci-ids.ucw.cz/
 
 ## Building a binary
 
