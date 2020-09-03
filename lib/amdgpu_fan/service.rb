@@ -99,7 +99,7 @@ module AmdgpuFan
     end
 
     def name
-      PCI.device_name vendor_id: vendor_id.to_s(16), device_id: device_id.to_s(16)
+      PCI.device_name(vendor_id: vendor_id.to_s(16), device_id: device_id.to_s(16)) || 'unknown'
     end
 
     def power_dpm_state
