@@ -99,7 +99,7 @@ module AmdgpuFan
     end
 
     def name
-      lspci_subsystem.split(': ')[1].strip
+      PCI.device_name vendor_id: vendor_id.to_s(16), device_id: device_id.to_s(16)
     end
 
     def power_dpm_state
@@ -157,6 +157,10 @@ module AmdgpuFan
       File.read(file).slice(/\w+(?= \*)/)
     end
 
+    def device_id
+      @device_id ||= File.read(File.join(base_card_dir, 'device')).to_i(16)
+    end
+
     def gpu_pci_id
       @gpu_pci_id ||= `lspci -v | grep VGA`.split(' ').first
     end
@@ -175,6 +179,10 @@ module AmdgpuFan
 
     def temperature_file
       @temperature_file ||= Dir.glob("#{base_card_dir}/**/temp1_input").first
+    end
+
+    def vendor_id
+      @vendor_id ||= File.read(File.join(base_card_dir, 'vendor')).to_i(16)
     end
   end
 end
