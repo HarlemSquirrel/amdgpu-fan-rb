@@ -32,17 +32,18 @@ module AmdgpuFan
       @info = raw.each_line.with_object({}) do |line, hash|
         next if line.empty? || line.start_with?('#')
 
-        # Vendor line
-        if line.start_with?(/(\d|[a-z])/)
+        if line[0] =~ /(\d|[a-z])/
+          # Vendor line
           current_vendor_id = line.split('  ').first.to_i(16)
           vendor_name = line.split('  ').last.strip
           hash[current_vendor_id] = { name: vendor_name, devices: {} }
-        # Device line
-        elsif line.start_with?(/\t\w/)
+        elsif line[0..1] =~ (/\t\w/)
+          # Device line
           current_device_id = line.split('  ').first.to_i(16)
           device_name = line.split('  ').last.strip
           hash[current_vendor_id][:devices][current_device_id] = { name: device_name }
         elsif line.start_with?(/\t\t\w/)
+          # Subvendor line
           subvendor_id = line.split(' ').first.to_i(16)
           subdevice_id = line.split(' ')[1].to_i(16)
           subdevice_name = line.split('  ')[1].strip
