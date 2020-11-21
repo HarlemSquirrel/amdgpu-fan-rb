@@ -212,8 +212,9 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#temperature' do
+    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'temp1_input' }
-    let(:file_contents) { rand(1000..9999) }
+    let(:file_contents) { rand(29_000..79_999) }
     let(:temperature) { (file_contents / 1000.0).round(1) }
 
     before do
