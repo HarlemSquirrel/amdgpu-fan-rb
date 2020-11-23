@@ -3,19 +3,35 @@
 module AmdgpuFan
   # A mixin to help with CLI output formatting
   module CliOutputFormat
-    METER_CHAR = '*'
+    METER_CHARS = [' ', *("\u2588".."\u258F").to_a.reverse].freeze
     TIME_FORMAT = '%F %T'
-
-    private
 
     def current_time
       Time.now.strftime(TIME_FORMAT)
     end
 
-    def percent_meter(percent, length = 10)
-      progress_bar_count = (length * percent.to_f / 100).round
-      percent_string = "#{format '%<num>0.2i', num: percent}%".ljust(3)
-      "[#{METER_CHAR * progress_bar_count}#{' ' * (length - progress_bar_count)}]#{percent_string}"
+    ##
+    # Return a string with meter and percentage for +percent+
+    #
+    def percent_meter(percent, width = 3)
+      meter_char_indexes = []
+      percent_portion_size = 100.0 / width
+      width.times do |i|
+        current_portion = percent.to_i - (percent_portion_size * i)
+
+        if current_portion >= percent_portion_size
+          current_portion_percent = 1
+        elsif current_portion <= 0
+          current_portion_percent = 0
+        else
+          current_portion_percent = current_portion / percent_portion_size
+        end
+
+        meter_char_indexes << ((METER_CHARS.length - 1) * current_portion_percent.to_f).round
+      end
+
+      percent_string = "#{format '%<num>0.2i', num: percent}%".ljust(4)
+      "#{percent_string}[#{meter_char_indexes.map { |i| METER_CHARS[i] }.join}]"
     end
 
     def radeon_logo

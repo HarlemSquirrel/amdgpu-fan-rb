@@ -67,7 +67,7 @@ module AmdgpuFan
             "#{amdgpu_service.power_dpm_state} mode using " \
             "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
             "(#{amdgpu_service.power_draw_percent}%)",
-           ICONS[:load] + ' Load:'.ljust(9) + percent_meter(amdgpu_service.busy_percent, 20)
+           ICONS[:load] + ' Load:'.ljust(9) + percent_meter(amdgpu_service.busy_percent)
     end
 
     desc 'version', 'Print the application version.'
