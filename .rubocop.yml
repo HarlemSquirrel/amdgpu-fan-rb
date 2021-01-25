@@ -1,7 +1,11 @@
+require:
+  - rubocop-rspec
+
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.4
+  NewCops: enable
+  TargetRubyVersion: 2.5
 
 Metrics/LineLength:
   Max: 100

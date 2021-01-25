@@ -17,8 +17,12 @@ Gem::Specification.new do |s|
     'https://github.com/HarlemSquirrel/amdgpu-fan-rb'
   s.license     = 'MIT'
 
+  s.required_ruby_version = '>= 2.5.0'
+
   s.add_runtime_dependency 'thor', '~> 1.0'
 
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rubocop', '~> 1.8'
+  s.add_development_dependency 'rubocop-rspec', '~> 2.1'
 end
