@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+
 require 'net/http'
 
 module AmdgpuFan
@@ -44,8 +46,8 @@ module AmdgpuFan
           hash[current_vendor_id][:devices][current_device_id] = { name: device_name }
         elsif line[0..2] =~ /\t\t\w/
           # Subvendor line
-          subvendor_id = line.split(' ').first.to_i(16)
-          subdevice_id = line.split(' ')[1].to_i(16)
+          # subvendor_id = line.split(' ').first.to_i(16)
+          subdevice_id = line.split[1].to_i(16)
           subdevice_name = line.split('  ')[1].strip
           hash[current_vendor_id][:devices][current_device_id][subdevice_id] =
             { name: subdevice_name }
@@ -60,3 +62,5 @@ module AmdgpuFan
     end
   end
 end
+
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength

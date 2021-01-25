@@ -5,13 +5,13 @@ require_relative '../../../lib/amdgpu_fan/watcher'
 require 'spec_helper'
 
 RSpec.describe AmdgpuFan::Watcher do
-  BASE_DIR = File.expand_path('../../../tmp', __dir__)
-  let(:file_dir) { "#{BASE_DIR}/card0/device" }
+  let(:base_dir) { File.expand_path('../../../tmp', __dir__) }
+  let(:file_dir) { "#{base_dir}/card0/device" }
   let(:watcher) { described_class.new AmdgpuFan::Service.new }
 
   before do
     FileUtils.mkdir_p File.join(file_dir, 'hwmon/hwmon0')
-    stub_const "#{AmdgpuFan::Service}::BASE_FOLDER", BASE_DIR
+    stub_const "#{AmdgpuFan::Service}::BASE_FOLDER", base_dir
     File.write File.join(file_dir, 'pp_dpm_sclk'), <<~DOC
       0: 852Mhz *
       1: 991Mhz

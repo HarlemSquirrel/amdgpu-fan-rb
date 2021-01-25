@@ -7,6 +7,7 @@ module AmdgpuFan
     attr_reader :unit
 
     def initialize(unit)
+      super
       @unit = unit
     end
 

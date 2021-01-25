@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/AbcSize, Metrics/ClassLength, Metrics/MethodLength
+
 require 'yaml'
 
 module AmdgpuFan
@@ -58,7 +60,7 @@ module AmdgpuFan
       puts radeon_logo if option == '--logo'
       puts ICONS[:gpu] + ' GPU:'.ljust(9) + amdgpu_service.name,
            ICONS[:vbios] + ' vBIOS:'.ljust(9) + amdgpu_service.vbios_version,
-           ICONS[:display] + ' Displays:' + amdgpu_service.display_names.join(', '),
+           "#{ICONS[:display]} Displays:#{amdgpu_service.display_names.join(', ')}",
            ICONS[:clock] + ' Clocks:'.ljust(9) + clock_status,
            ICONS[:memory] + ' Memory:'.ljust(9) + mem_total_mibibyes,
            ICONS[:fan] + ' Fan:'.ljust(9) + fan_status,
@@ -120,11 +122,11 @@ module AmdgpuFan
         watcher.measure
         5.times { print "\033[K\033[A" } # move up a line and clear to end of line
 
-        puts ICONS[:clock] +  ' Core clock  ' + watcher.core_clock.to_s,
-             ICONS[:memory] + ' Memory clk  ' + watcher.mem_clock.to_s,
-             ICONS[:fan] +    ' Fan speed   ' + watcher.fan_speed.to_s,
-             ICONS[:power] +  ' Power usage ' + watcher.power.to_s,
-             ICONS[:temp] +   ' Temperature ' + watcher.temp.to_s
+        puts "#{ICONS[:clock]} Core clock  #{watcher.core_clock}",
+             "#{ICONS[:memory]} Memory clk  #{watcher.mem_clock}",
+             "#{ICONS[:fan]} Fan speed   #{watcher.fan_speed}",
+             "#{ICONS[:power]} Power usage #{watcher.power}",
+             "#{ICONS[:temp]} Temperature #{watcher.temp}"
         sleep 1
       end
     end
@@ -201,3 +203,5 @@ module AmdgpuFan
     end
   end
 end
+
+# rubocop:enable Metrics/AbcSize, Metrics/ClassLength, Metrics/MethodLength

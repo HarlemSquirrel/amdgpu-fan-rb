@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
+
 require 'fileutils'
 
 require_relative '../../../lib/amdgpu_fan/service'
 require_relative '../../spec_helper'
 
 RSpec.describe AmdgpuFan::Service do
-  BASE_DIR = File.expand_path('../../tmp', __dir__)
+  let(:base_dir) { File.expand_path('../../tmp', __dir__) }
 
   let(:amdgpu_service) { described_class.new }
-  let(:file_dir) { "#{BASE_DIR}/card0/device" }
+  let(:file_dir) { "#{base_dir}/card0/device" }
 
   before do
     FileUtils.mkdir_p file_dir
-    stub_const "#{described_class}::BASE_FOLDER", BASE_DIR
+    stub_const "#{described_class}::BASE_FOLDER", base_dir
   end
 
   describe '#busy_percent' do
@@ -30,7 +32,7 @@ RSpec.describe AmdgpuFan::Service do
 
   describe '#fan_mode' do
     let(:file_name) { 'pwm1_enable' }
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
 
     before do
       File.write("#{file_dir}/#{file_name}", file_contents)
@@ -50,7 +52,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#fan_speed_percent' do
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1' }
     let(:file_contents) { rand(255) }
     let(:percent) { (file_contents / 255.0 * 100).round }
@@ -104,7 +106,7 @@ RSpec.describe AmdgpuFan::Service do
   describe '#power_draw' do
     let(:file_name) { 'power1_average' }
     let(:file_contents) { 52_210_000 }
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
 
     before do
       File.write("#{file_dir}/#{file_name}", file_contents)
@@ -114,7 +116,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#power_draw_percent' do
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:power_avg_file_name) { 'power1_average' }
     let(:power_avg_file_contents) { 52_210_000 }
     let(:power_cap_file_name) { 'power1_cap' }
@@ -129,7 +131,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#power_max' do
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'power1_cap' }
     let(:file_contents) { 300_000_000 }
 
@@ -141,7 +143,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   xdescribe '#set_mode!' do
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1_enable' }
     let(:file_path) { "#{file_dir}/#{file_name}" }
 
@@ -165,7 +167,7 @@ RSpec.describe AmdgpuFan::Service do
   describe '#fan_speed=' do
     let(:error) { described_class::Error }
     let(:file_contents) { '' }
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1' }
     let(:enable_file_contents) { '2' }
     let(:enabled_file_name) { 'pwm1_enable' }
@@ -212,7 +214,7 @@ RSpec.describe AmdgpuFan::Service do
   end
 
   describe '#temperature' do
-    let(:file_dir) { "#{BASE_DIR}/card0/device/hwmon/hwmon0" }
+    let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'temp1_input' }
     let(:file_contents) { rand(29_000..79_999) }
     let(:temperature) { (file_contents / 1000.0).round(1) }
@@ -235,3 +237,5 @@ RSpec.describe AmdgpuFan::Service do
     it { expect(amdgpu_service.vbios_version).to eq 'vbios version string' }
   end
 end
+
+# rubocop:enable Metrics/BlockLength
