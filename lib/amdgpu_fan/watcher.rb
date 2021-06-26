@@ -5,17 +5,17 @@ require_relative 'stat_set'
 module AmdgpuFan
   # Keep track of stats over time.
   class Watcher
-    attr_reader :core_clock, :fan_speed, :num_measurements, :mem_clock, :power, :temp
+    attr_reader :core_clock, :fan_speed_rpm, :num_measurements, :memory_clock, :power_draw, :temperature
 
     def initialize(amdgpu_service)
       @amdgpu_service = amdgpu_service
       @num_measurements = 0
 
       @core_clock = StatSet.new 'MHz'
-      @mem_clock = StatSet.new 'MHz'
-      @fan_speed = StatSet.new 'RPM'
-      @power = StatSet.new 'W'
-      @temp = StatSet.new '°C'
+      @memory_clock = StatSet.new 'MHz'
+      @fan_speed_rpm = StatSet.new 'RPM'
+      @power_draw = StatSet.new 'W'
+      @temperature = StatSet.new '°C'
     end
 
     ##
@@ -24,18 +24,19 @@ module AmdgpuFan
     def measure
       @num_measurements += 1
 
-      @core_clock.now = @amdgpu_service.core_clock.to_i
-      @mem_clock.now = @amdgpu_service.memory_clock.to_i
-      @fan_speed.now = @amdgpu_service.fan_speed_rpm.to_i
-      @power.now = @amdgpu_service.power_draw.to_f
-      @temp.now = @amdgpu_service.temperature.to_i
-
-      [@core_clock, @mem_clock, @fan_speed, @power, @temp].each do |stat_set|
-        calculate_stats(stat_set)
+      threads = %i[core_clock fan_speed_rpm memory_clock power_draw temperature].map do |stat|
+        Thread.new do
+          send(stat).now = amdgpu_service.send(stat)
+          calculate_stats(send(stat))
+        end
       end
+
+      threads.each(&:join)
     end
 
     private
+
+    attr_reader :amdgpu_service
 
     def calculate_stats(stat_set)
       if num_measurements == 1

@@ -78,7 +78,7 @@ module AmdgpuFan
     # Return the fan speed in revolutions per minute
     #
     def fan_speed_rpm
-      File.read(fan_file(:input)).strip
+      File.read(fan_file(:input)).strip.to_i
     end
 
     ##
@@ -159,7 +159,7 @@ module AmdgpuFan
     end
 
     def clock_from_pp_file(file)
-      File.read(file).slice(/\w+(?= \*)/)
+      File.read(file).slice(/\w+(?= \*)/).to_i
     end
 
     def device_id
