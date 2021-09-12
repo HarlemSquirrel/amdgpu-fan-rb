@@ -40,7 +40,7 @@ RSpec.describe AmdgpuFan::Watcher do
       let(:fan_stats) { 'min:   1207 RPM avg: 1207.0 RPM max:   1207 RPM now:   1207 RPM ' }
 
       it { expect { watcher.measure }.to change { watcher.core_clock.to_s }.to(core_stats) }
-      it { expect { watcher.measure }.to change { watcher.fan_speed.to_s }.to(fan_stats) }
+      it { expect { watcher.measure }.to change { watcher.fan_speed_rpm.to_s }.to(fan_stats) }
     end
   end
 end
