@@ -58,18 +58,18 @@ module AmdgpuFan
     desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
     def status(option = nil)
       puts radeon_logo if option == '--logo'
-      puts ICONS[:gpu] + ' GPU:'.ljust(9) + amdgpu_service.name,
-           ICONS[:vbios] + ' vBIOS:'.ljust(9) + amdgpu_service.vbios_version,
-           "#{ICONS[:display]} Displays:#{amdgpu_service.display_names.join(', ')}",
-           ICONS[:clock] + ' Clocks:'.ljust(9) + clock_status,
-           ICONS[:memory] + ' Memory:'.ljust(9) + mem_total_mibibyes,
-           ICONS[:fan] + ' Fan:'.ljust(9) + fan_status,
-           ICONS[:temp] + ' Temp:'.ljust(9) + "#{amdgpu_service.temperature}°C",
-           ICONS[:power] + ' Power:'.ljust(9) + "#{amdgpu_service.profile_mode} profile in " \
+      puts ICONS[:gpu] + ' GPU:'.ljust(9) + amdgpu_service.name
+      puts ICONS[:vbios] + ' vBIOS:'.ljust(9) + amdgpu_service.vbios_version
+      puts "#{ICONS[:display]} Displays:#{amdgpu_service.display_names.join(', ')}"
+      puts ICONS[:clock] + ' Clocks:'.ljust(9) + clock_status
+      puts ICONS[:memory] + ' Memory:'.ljust(9) + mem_total_mibibyes
+      puts ICONS[:fan] + ' Fan:'.ljust(9) + fan_status
+      puts ICONS[:temp] + ' Temp:'.ljust(9) + "#{amdgpu_service.temperature}°C"
+      puts ICONS[:power] + ' Power:'.ljust(9) + "#{amdgpu_service.profile_mode} profile in " \
             "#{amdgpu_service.power_dpm_state} mode using " \
             "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
-            "(#{amdgpu_service.power_draw_percent}%)",
-           ICONS[:load] + ' Load:'.ljust(9) + percent_meter(amdgpu_service.busy_percent)
+            "(#{amdgpu_service.power_draw_percent}%)"
+      puts ICONS[:load] + ' Load:'.ljust(9) + percent_meter(amdgpu_service.busy_percent)
     end
 
     desc 'version', 'Print the application version.'
@@ -179,8 +179,8 @@ module AmdgpuFan
     end
 
     def summary_clock
-      "Core: #{amdgpu_service.core_clock.rjust(7)}#{WATCH_FIELD_SEPARATOR}"\
-        "Memory: #{amdgpu_service.memory_clock.rjust(7)}"
+      "Core: #{amdgpu_service.core_clock.to_s.rjust(7)}#{WATCH_FIELD_SEPARATOR}"\
+        "Memory: #{amdgpu_service.memory_clock.to_s.rjust(7)}"
     end
 
     def summary_fan
