@@ -136,7 +136,7 @@ module AmdgpuFan
     def watch_csv(seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
-      puts 'Timestamp, Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm), '\
+      puts 'Timestamp,Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm),'\
            'Load (%),Power (Watts),Temp (°C)'
 
       trap 'SIGINT' do
@@ -144,13 +144,19 @@ module AmdgpuFan
       end
 
       loop do
-        puts [Time.now.strftime('%F %T'),
-              amdgpu_service.core_clock,
-              amdgpu_service.memory_clock,
-              amdgpu_service.fan_speed_rpm,
-              amdgpu_service.busy_percent,
-              amdgpu_service.power_draw,
-              amdgpu_service.temperature].join(',')
+        list = []
+        threads = [
+          Thread.new { list[0] = amdgpu_service.core_clock },
+          Thread.new { list[1] = amdgpu_service.memory_clock },
+          Thread.new { list[2] = amdgpu_service.fan_speed_rpm },
+          Thread.new { list[3] = amdgpu_service.busy_percent },
+          Thread.new { list[4] = amdgpu_service.power_draw },
+          Thread.new { list[5] = amdgpu_service.temperature },
+        ]
+        threads.each(&:join)
+
+        puts [Time.now.strftime('%F %T'), *list].join(',')
+
         sleep seconds.to_i
       end
     end
