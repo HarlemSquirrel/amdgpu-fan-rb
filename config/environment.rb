@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'async'
 require 'thor'
 
 require_relative '../lib/amdgpu_fan'

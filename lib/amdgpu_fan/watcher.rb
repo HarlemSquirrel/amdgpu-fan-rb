@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'async'
+
 require_relative 'stat_set'
 
 module AmdgpuFan
@@ -24,14 +26,14 @@ module AmdgpuFan
     def measure
       @num_measurements += 1
 
-      threads = %i[core_clock fan_speed_rpm memory_clock power_draw temperature].map do |stat|
-        Thread.new do
-          send(stat).now = amdgpu_service.send(stat)
-          calculate_stats(send(stat))
+      Async do |task|
+        %i[core_clock fan_speed_rpm memory_clock power_draw temperature].each do |stat|
+          task.async do
+            send(stat).now = amdgpu_service.send(stat)
+            calculate_stats(send(stat))
+          end
         end
       end
-
-      threads.each(&:join)
     end
 
     private
