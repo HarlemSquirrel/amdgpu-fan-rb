@@ -2,8 +2,6 @@
 
 # rubocop:disable Metrics/BlockLength
 
-require 'fileutils'
-
 require_relative '../../../lib/amdgpu_fan/service'
 require_relative '../../spec_helper'
 
