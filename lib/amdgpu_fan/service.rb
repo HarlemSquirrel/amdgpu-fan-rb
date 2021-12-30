@@ -31,7 +31,7 @@ module AmdgpuFan
     end
 
     def connectors
-      @connectors ||= Connector.where card_num: card_num
+      @connectors ||= Connector.where card_num:
     end
 
     def core_clock

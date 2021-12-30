@@ -7,7 +7,8 @@ require_relative 'stat_set'
 module AmdgpuFan
   # Keep track of stats over time.
   class Watcher
-    attr_reader :core_clock, :fan_speed_rpm, :num_measurements, :memory_clock, :power_draw, :temperature
+    attr_reader :core_clock, :fan_speed_rpm, :num_measurements, :memory_clock, :power_draw,
+                :temperature
 
     def initialize(amdgpu_service)
       @amdgpu_service = amdgpu_service
@@ -50,7 +51,7 @@ module AmdgpuFan
 
       stat_set.min = stat_set.now if stat_set.now < stat_set.min
       stat_set.avg =
-        ((stat_set.now + stat_set.avg * (num_measurements - 1)) / num_measurements.to_f)
+        ((stat_set.now + (stat_set.avg * (num_measurements - 1))) / num_measurements.to_f)
         .round(1)
       stat_set.max = stat_set.now if stat_set.now > stat_set.max
     end

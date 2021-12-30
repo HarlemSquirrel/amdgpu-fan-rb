@@ -65,10 +65,11 @@ module AmdgpuFan
       puts ICONS[:memory] + ' Memory:'.ljust(9) + mem_total_mibibyes
       puts ICONS[:fan] + ' Fan:'.ljust(9) + fan_status
       puts ICONS[:temp] + ' Temp:'.ljust(9) + "#{amdgpu_service.temperature}°C"
-      puts ICONS[:power] + ' Power:'.ljust(9) + "#{amdgpu_service.profile_mode} profile in " \
-            "#{amdgpu_service.power_dpm_state} mode using " \
-            "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
-            "(#{amdgpu_service.power_draw_percent}%)"
+      puts ICONS[:power] + ' Power:'.ljust(9) +
+           "#{amdgpu_service.profile_mode} profile in " \
+           "#{amdgpu_service.power_dpm_state} mode using " \
+           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
+           "(#{amdgpu_service.power_draw_percent}%)"
       puts ICONS[:load] + ' Load:'.ljust(9) + percent_meter(amdgpu_service.busy_percent)
     end
 
@@ -78,7 +79,7 @@ module AmdgpuFan
     end
 
     desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
-         'refreshed every n seconds.'
+                            'refreshed every n seconds.'
     def watch(seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
@@ -132,7 +133,7 @@ module AmdgpuFan
     end
 
     desc 'watch_csv [SECONDS]', 'Watch stats in CSV format ' \
-         'refreshed every n seconds defaulting to 1 second.'
+                                'refreshed every n seconds defaulting to 1 second.'
     def watch_csv(seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
@@ -151,7 +152,7 @@ module AmdgpuFan
           Thread.new { list[2] = amdgpu_service.fan_speed_rpm },
           Thread.new { list[3] = amdgpu_service.busy_percent },
           Thread.new { list[4] = amdgpu_service.power_draw },
-          Thread.new { list[5] = amdgpu_service.temperature },
+          Thread.new { list[5] = amdgpu_service.temperature }
         ]
         threads.each(&:join)
 
@@ -173,7 +174,7 @@ module AmdgpuFan
 
     def fan_status
       "#{amdgpu_service.fan_mode} mode running at " \
-       "#{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%)"
+        "#{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%)"
     end
 
     def mem_total_mibibyes

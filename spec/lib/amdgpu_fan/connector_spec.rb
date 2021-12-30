@@ -4,7 +4,7 @@ require_relative '../../../lib/amdgpu_fan/connector'
 require 'spec_helper'
 
 RSpec.describe AmdgpuFan::Connector do
-  let(:connector) { described_class.new card_num: 0, dir_path: dir_path, index: 1, type: type }
+  let(:connector) { described_class.new card_num: 0, dir_path:, index: 1, type: }
 
   describe '#display_name' do
     context 'with a AUO B173HAN03.2 display on DP 1' do
