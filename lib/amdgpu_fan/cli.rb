@@ -13,6 +13,10 @@ module AmdgpuFan
                 .transform_keys(&:to_sym).freeze
     WATCH_FIELD_SEPARATOR = ' | '
 
+    def self.exit_on_failure?
+      true
+    end
+
     desc 'connectors', 'View the status of the display connectors.'
     def connectors
       amdgpu_service.connectors.each do |connector|
