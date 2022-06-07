@@ -12,7 +12,7 @@ module AmdgpuFan
     end
 
     def stats
-      { min: min, avg: avg, max: max, now: now }
+      { min:, avg:, max:, now: }
     end
 
     ##

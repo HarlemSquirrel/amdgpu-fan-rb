@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
-
 require_relative '../../../lib/amdgpu_fan/service'
 require_relative '../../spec_helper'
 
@@ -235,5 +233,3 @@ RSpec.describe AmdgpuFan::Service do
     it { expect(amdgpu_service.vbios_version).to eq 'vbios version string' }
   end
 end
-
-# rubocop:enable Metrics/BlockLength
