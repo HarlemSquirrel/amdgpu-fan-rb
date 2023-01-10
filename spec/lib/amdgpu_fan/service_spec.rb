@@ -150,20 +150,24 @@ RSpec.describe AmdgpuFan::Service do
     end
 
     context 'when manual is passed in' do
-      let(:expected_val) { "1" }
+      let(:expected_val) { '1' }
       let(:mode) { 'manual' }
 
       it 'writes 1' do
-        expect { amdgpu_service.fan_mode = mode }.to change { File.read(file_path) }.to "#{expected_val}\n"
+        expect { amdgpu_service.fan_mode = mode }.to change {
+                                                       File.read(file_path)
+                                                     }.to "#{expected_val}\n"
       end
     end
 
     context 'when auto is passed in' do
-      let(:expected_val) { "2" }
+      let(:expected_val) { '2' }
       let(:mode) { 'auto' }
 
       it 'writes 2' do
-        expect { amdgpu_service.fan_mode = mode }.to change { File.read(file_path) }.to "#{expected_val}\n"
+        expect { amdgpu_service.fan_mode = mode }.to change {
+                                                       File.read(file_path)
+                                                     }.to "#{expected_val}\n"
       end
     end
   end
