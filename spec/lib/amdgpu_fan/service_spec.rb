@@ -138,24 +138,30 @@ RSpec.describe AmdgpuFan::Service do
     it { expect(amdgpu_service.power_max).to eq 300.0 }
   end
 
-  xdescribe '#set_mode!' do
+  describe '#fan_mode=' do
     let(:file_dir) { "#{base_dir}/card0/device/hwmon/hwmon0" }
     let(:file_name) { 'pwm1_enable' }
     let(:file_path) { "#{file_dir}/#{file_name}" }
 
+    before do
+      stub_sudo_write(file_path, expected_val)
+    end
+
     context 'when manual is passed in' do
+      let(:expected_val) { "1" }
       let(:mode) { 'manual' }
 
       it 'writes 1' do
-        expect { amdgpu_service.set_mode!(mode) }.to change { File.read(file_path) }.to "1\n"
+        expect { amdgpu_service.fan_mode = mode }.to change { File.read(file_path) }.to "#{expected_val}\n"
       end
     end
 
     context 'when auto is passed in' do
+      let(:expected_val) { "2" }
       let(:mode) { 'auto' }
 
       it 'writes 2' do
-        expect { amdgpu_service.set_mode!(mode) }.to change { File.read(file_path) }.to "2\n"
+        expect { amdgpu_service.fan_mode = mode }.to change { File.read(file_path) }.to "#{expected_val}\n"
       end
     end
   end
@@ -187,12 +193,8 @@ RSpec.describe AmdgpuFan::Service do
       let(:value) { 25 }
 
       before do
-        allow(amdgpu_service).to receive(:sudo_write)
-          .with("#{file_dir}/#{file_name}", 64) { File.write "#{file_dir}/#{file_name}", "64\n" }
-        allow(amdgpu_service).to receive(:sudo_write)
-          .with("#{file_dir}/#{enabled_file_name}", '1') do
-            File.write "#{file_dir}/#{enabled_file_name}", "1\n"
-          end
+        stub_sudo_write("#{file_dir}/#{file_name}", 64)
+        stub_sudo_write("#{file_dir}/#{enabled_file_name}", '1')
       end
 
       it 'sets mode to manual by writing 1 to' do
@@ -232,4 +234,9 @@ RSpec.describe AmdgpuFan::Service do
 
     it { expect(amdgpu_service.vbios_version).to eq 'vbios version string' }
   end
+end
+
+def stub_sudo_write(file_path, value)
+  allow(amdgpu_service).to receive(:sudo_write)
+    .with(file_path, value) { File.write file_path, "#{value}\n" }
 end

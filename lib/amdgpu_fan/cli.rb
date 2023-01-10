@@ -72,7 +72,7 @@ module AmdgpuFan
       puts ICONS[:power] + ' Power:'.ljust(11) +
            "#{amdgpu_service.profile_mode} profile in " \
            "#{amdgpu_service.power_dpm_state} mode using " \
-           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts "\
+           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts " \
            "(#{amdgpu_service.power_draw_percent}%)"
       puts ICONS[:load] + ' Load:'.ljust(11) + percent_meter(amdgpu_service.busy_percent, 12)
     end
@@ -141,7 +141,7 @@ module AmdgpuFan
     def watch_csv(seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
-      puts 'Timestamp,Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm),'\
+      puts 'Timestamp,Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm),' \
            'Load (%),Power (Watts),Temp (°C)'
 
       trap 'SIGINT' do
@@ -190,7 +190,7 @@ module AmdgpuFan
     end
 
     def summary_clock
-      "Core: #{amdgpu_service.core_clock.to_s.rjust(7)}#{WATCH_FIELD_SEPARATOR}"\
+      "Core: #{amdgpu_service.core_clock.to_s.rjust(7)}#{WATCH_FIELD_SEPARATOR}" \
         "Memory: #{amdgpu_service.memory_clock.to_s.rjust(7)}"
     end
 
@@ -204,8 +204,8 @@ module AmdgpuFan
     end
 
     def summary_power
-      "Power: #{format('%<num>0.02f', num: amdgpu_service.power_draw).rjust(power_max.length)} W" \
-        " #{percent_meter amdgpu_service.power_draw_percent}"
+      "Power: #{format('%<num>0.02f', num: amdgpu_service.power_draw).rjust(power_max.length)} W " \
+        "#{percent_meter amdgpu_service.power_draw_percent}"
     end
 
     def summary_temp

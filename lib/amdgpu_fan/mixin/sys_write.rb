@@ -8,6 +8,7 @@ module AmdgpuFan
     ##
     # Write to a system file with elevated priviledges.
     def sudo_write(file_path, value)
+      raise("wat")
       `echo "#{value}" | sudo tee #{file_path}`
     end
   end
