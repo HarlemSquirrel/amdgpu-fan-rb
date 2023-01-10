@@ -10,7 +10,7 @@ RSpec.describe AmdgpuFan::Service do
   let(:file_dir) { "#{base_dir}/card0/device" }
 
   before do
-    FileUtils.mkdir_p file_dir
+    FileUtils.mkdir_p "#{file_dir}/hwmon"
     stub_const "#{described_class}::BASE_FOLDER", base_dir
   end
 
