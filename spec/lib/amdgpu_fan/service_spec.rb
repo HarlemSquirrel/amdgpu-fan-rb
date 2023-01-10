@@ -10,7 +10,7 @@ RSpec.describe AmdgpuFan::Service do
   let(:file_dir) { "#{base_dir}/card0/device" }
 
   before do
-    FileUtils.mkdir_p "#{file_dir}/hwmon"
+    FileUtils.mkdir_p file_dir
     stub_const "#{described_class}::BASE_FOLDER", base_dir
   end
 
@@ -144,6 +144,8 @@ RSpec.describe AmdgpuFan::Service do
     let(:file_path) { "#{file_dir}/#{file_name}" }
 
     before do
+      FileUtils.mkdir_p file_dir
+      FileUtils.touch(file_path)
       stub_sudo_write(file_path, expected_val)
     end
 
@@ -193,6 +195,9 @@ RSpec.describe AmdgpuFan::Service do
       let(:value) { 25 }
 
       before do
+        FileUtils.mkdir_p file_dir
+        FileUtils.touch("#{file_dir}/#{file_name}")
+        FileUtils.touch("#{file_dir}/#{enabled_file_name}")
         stub_sudo_write("#{file_dir}/#{file_name}", 64)
         stub_sudo_write("#{file_dir}/#{enabled_file_name}", '1')
       end
