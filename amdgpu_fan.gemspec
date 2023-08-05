@@ -22,10 +22,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'async', '~> 2.0'
   s.add_runtime_dependency 'thor', '~> 1.2'
 
-  s.add_development_dependency 'pry', '~> 0.14'
-  s.add_development_dependency 'rspec', '~> 3.10'
-  s.add_development_dependency 'rubocop', '~> 1.24'
-  s.add_development_dependency 'rubocop-rspec', '~> 2.7'
   s.metadata = {
     'rubygems_mfa_required' => 'true'
   }

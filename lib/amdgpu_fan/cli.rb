@@ -9,7 +9,7 @@ module AmdgpuFan
   class Cli < Thor
     include CliOutputFormat
 
-    ICONS = YAML.safe_load(File.read(File.join(__dir__, '../../config/icons.yml')))
+    ICONS = YAML.safe_load_file(File.join(__dir__, '../../config/icons.yml'))
                 .transform_keys(&:to_sym).freeze
     WATCH_FIELD_SEPARATOR = ' | '
 
