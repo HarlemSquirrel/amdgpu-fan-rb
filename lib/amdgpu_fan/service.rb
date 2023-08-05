@@ -22,8 +22,12 @@ module AmdgpuFan
 
     class Error < StandardError; end
 
-    def initialize(card_num: 0)
-      @card_num = card_num
+    def self.card_numbers
+      Dir["#{BASE_FOLDER}/card*"].filter_map { |path| path.split('/').last.slice(/(?<=card)\d+\Z/) }
+    end
+
+    def initialize(card_num: nil)
+      @card_num = card_num || self.class.card_numbers.first
     end
 
     def busy_percent

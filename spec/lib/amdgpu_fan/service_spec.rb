@@ -12,6 +12,7 @@ RSpec.describe AmdgpuFan::Service do
   before do
     FileUtils.mkdir_p file_dir
     stub_const "#{described_class}::BASE_FOLDER", base_dir
+    allow(described_class).to receive(:card_numbers).and_return([0])
   end
 
   describe '#busy_percent' do

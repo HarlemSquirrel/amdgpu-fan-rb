@@ -169,6 +169,7 @@ module AmdgpuFan
     private
 
     def amdgpu_service
+      # Right now we're only looking at the first card.
       @amdgpu_service ||= AmdgpuFan::Service.new
     end
 
