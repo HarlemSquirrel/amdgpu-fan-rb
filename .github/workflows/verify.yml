@@ -1,4 +1,4 @@
-name: Specs
+name: Verify
 
 on:
   pull_request:
@@ -7,6 +7,21 @@ on:
       - master
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby 3.2
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 3.2.x
+      - name: Install Dependencies
+        run: |
+          gem install bundler
+          bundle install
+      - name: Lint files with Rubocop
+        run: |
+          bundle exec rubocop
   test:
     strategy:
       fail-fast: false
