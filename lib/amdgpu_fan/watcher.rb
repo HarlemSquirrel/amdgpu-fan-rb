@@ -7,8 +7,8 @@ require_relative 'stat_set'
 module AmdgpuFan
   # Keep track of stats over time.
   class Watcher
-    attr_reader :core_clock, :fan_speed_rpm, :busy_percent, :num_measurements, :memory_clock, :power_draw,
-                :temperature
+    attr_reader :core_clock, :fan_speed_rpm, :busy_percent, :num_measurements, :memory_clock,
+                :power_draw, :temperature
 
     def initialize(amdgpu_service)
       @amdgpu_service = amdgpu_service
