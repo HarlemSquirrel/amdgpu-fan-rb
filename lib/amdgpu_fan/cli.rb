@@ -125,9 +125,10 @@ module AmdgpuFan
 
       loop do
         watcher.measure
-        5.times { print "\033[K\033[A" } # move up a line and clear to end of line
+        6.times { print "\033[K\033[A" } # move up a line and clear to end of line
 
-        puts "#{ICONS[:clock]} Core clock  #{watcher.core_clock}",
+        puts "#{ICONS[:load]} Load        #{watcher.busy_percent}",
+             "#{ICONS[:clock]} Core clock  #{watcher.core_clock}",
              "#{ICONS[:memory]} Memory clk  #{watcher.memory_clock}",
              "#{ICONS[:fan]} Fan speed   #{watcher.fan_speed_rpm}",
              "#{ICONS[:power]} Power usage #{watcher.power_draw}",

@@ -24,7 +24,7 @@ RSpec.describe AmdgpuFan::Service do
       File.write("#{file_dir}/#{file_name}", percent)
     end
 
-    it { expect(amdgpu_service.busy_percent).to eq percent.to_s }
+    it { expect(amdgpu_service.busy_percent).to eq percent }
   end
 
   describe '#fan_mode' do

@@ -31,7 +31,7 @@ module AmdgpuFan
     end
 
     def busy_percent
-      File.read("#{base_card_dir}/gpu_busy_percent").strip
+      File.read("#{base_card_dir}/gpu_busy_percent").strip.to_i
     end
 
     def connectors

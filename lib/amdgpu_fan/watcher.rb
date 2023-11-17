@@ -7,7 +7,7 @@ require_relative 'stat_set'
 module AmdgpuFan
   # Keep track of stats over time.
   class Watcher
-    attr_reader :core_clock, :fan_speed_rpm, :num_measurements, :memory_clock, :power_draw,
+    attr_reader :core_clock, :fan_speed_rpm, :busy_percent, :num_measurements, :memory_clock, :power_draw,
                 :temperature
 
     def initialize(amdgpu_service)
@@ -17,6 +17,7 @@ module AmdgpuFan
       @core_clock = StatSet.new 'MHz'
       @memory_clock = StatSet.new 'MHz'
       @fan_speed_rpm = StatSet.new 'RPM'
+      @busy_percent = StatSet.new '%'
       @power_draw = StatSet.new 'W'
       @temperature = StatSet.new '°C'
     end
@@ -28,7 +29,7 @@ module AmdgpuFan
       @num_measurements += 1
 
       Async do |task|
-        %i[core_clock fan_speed_rpm memory_clock power_draw temperature].each do |stat|
+        %i[busy_percent core_clock fan_speed_rpm memory_clock power_draw temperature].each do |stat|
           task.async do
             send(stat).now = amdgpu_service.send(stat)
             calculate_stats(send(stat))
