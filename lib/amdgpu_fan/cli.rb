@@ -25,18 +25,30 @@ module AmdgpuFan
       end
     end
 
+    desc 'power_mode_auto', 'Set the power profile to automatic mode.'
+    def power_mode_auto
+      amdgpu_service.set_performance_level("auto")
+      puts oneline_power_mode
+    end
+
+    desc 'power_mode_low', 'Set the performance level to low to force the clocks to the lowest power state.'
+    def power_mode_low
+      amdgpu_service.set_performance_level("low")
+      puts oneline_power_mode
+    end
+
+    desc 'power_mode_high', 'Set the performance level to low to force the clocks to the highest power state.'
+    def power_mode_high
+      amdgpu_service.set_performance_level("high")
+      puts oneline_power_mode
+    end
+
     desc 'profile', 'View power profile details.'
     def profile
       puts amdgpu_service.profile_summary
     end
 
-    desc 'profile_auto', 'Set the power profile to automatic mode.'
-    def profile_auto
-      amdgpu_service.profile_auto
-      puts amdgpu_service.profile_summary
-    end
-
-    desc 'profile_force PROFILE_NUM', 'Manually set a power profile. (requires sudo)'
+    desc 'profile_force PROFILE_NUM', 'Set performance mode to manual and set a power profile. (requires sudo)'
     def profile_force(state)
       amdgpu_service.profile_force = state
       puts amdgpu_service.profile_summary
@@ -71,7 +83,7 @@ module AmdgpuFan
       puts ICONS[:temp] + ' Temp:'.ljust(11) + "#{amdgpu_service.temperature}°C"
       puts ICONS[:power] + ' Power:'.ljust(11) +
            "#{amdgpu_service.profile_mode} profile in " \
-           "#{amdgpu_service.power_dpm_state} mode using " \
+           "#{amdgpu_service.performance_level} mode using " \
            "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts " \
            "(#{amdgpu_service.power_draw_percent}%)"
       puts ICONS[:load] + ' Load:'.ljust(11) + percent_meter(amdgpu_service.busy_percent, 12)
@@ -189,6 +201,12 @@ module AmdgpuFan
 
     def power_max
       format('%<num>0.2f', num: amdgpu_service.power_max)
+    end
+
+    def oneline_power_mode
+      "--> #{ICONS[:power]} #{amdgpu_service.performance_level} mode using " \
+        "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts " \
+        "(#{amdgpu_service.power_draw_percent}%)"
     end
 
     def summary_clock

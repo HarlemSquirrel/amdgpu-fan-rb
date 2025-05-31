@@ -111,6 +111,9 @@ module AmdgpuFan
         .join(' ')
     end
 
+    ##
+    # For older GPUs
+    # https://dri.freedesktop.org/docs/drm/gpu/amdgpu.html#power-dpm-state
     def power_dpm_state
       File.read("#{base_card_dir}/power_dpm_state").strip
     end
@@ -127,8 +130,13 @@ module AmdgpuFan
       @power_max ||= power_raw_to_watts File.read("#{base_hwmon_dir}/power1_cap")
     end
 
-    def profile_auto
-      sudo_write "#{base_card_dir}/power_dpm_force_performance_level", 'auto'
+    # https://dri.freedesktop.org/docs/drm/gpu/amdgpu.html#power-dpm-force-performance-level
+    def performance_level
+      File.read("#{base_card_dir}/power_dpm_force_performance_level").strip
+    end
+
+    def set_performance_level(profile_name = "auto")
+      sudo_write "#{base_card_dir}/power_dpm_force_performance_level", profile_name
     end
 
     def profile_force=(state)
