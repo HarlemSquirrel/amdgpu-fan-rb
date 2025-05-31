@@ -16,21 +16,29 @@ A Ruby CLI to read and set fan speed, power profiles, and more for AMD Radeon gr
 
 ## Installation
 
-The `amdgpu_fan` CLI command can be installed from [RubyGems](https://rubygems.org/gems/amdgpu_fan) or easily run from the source code.
+The `amdgpu_fan` CLI command can be installed in [Arch Linux from the AUR](https://aur.archlinux.org/packages/ruby-amdgpu_fan), from [RubyGems](https://rubygems.org/gems/amdgpu_fan), or run from the source code.
+
+### Arch User Repository
+
+Use your favorite tool such as [`paru`](https://aur.archlinux.org/packages/paru) to install [`ruby-amdgrpu_fan`](https://aur.archlinux.org/packages/ruby-amdgpu_fan) from the AUR.
+
+```sh
+paru -S ruby-amdgpu_fan
+```
 
 ### From RubyGems
 
-```
+```sh
 gem install amdgpu_fan
 ```
 
 ### From Source
 
-```
-➤  git clone https://github.com/HarlemSquirrel/amdgpu-fan-rb.git
-➤  cd amdgpu-fan-rb
-➤  bundle install
-➤  bin/amdgpu_fan
+```sh
+git clone https://github.com/HarlemSquirrel/amdgpu-fan-rb.git
+cd amdgpu-fan-rb
+bundle install
+bin/amdgpu_fan
 ```
 
 ## Usage
