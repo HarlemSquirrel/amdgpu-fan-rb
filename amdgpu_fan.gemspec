@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.1.0'
 
-  s.add_runtime_dependency 'async', '~> 2.0'
-  s.add_runtime_dependency 'thor', '~> 1.2'
+  s.add_dependency 'async', '~> 2.0'
+  s.add_dependency 'thor', '~> 1.2'
 
   s.metadata = {
     'rubygems_mfa_required' => 'true'

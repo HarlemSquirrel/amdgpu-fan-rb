@@ -36,7 +36,7 @@ module AmdgpuFan
     end
 
     def valid_fan_percent_speed?(percent)
-      (1..(100.to_i)).cover?(percent.to_i)
+      (1..(100)).cover?(percent.to_i)
     end
   end
 end

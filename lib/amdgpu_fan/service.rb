@@ -135,7 +135,7 @@ module AmdgpuFan
       File.read("#{base_card_dir}/power_dpm_force_performance_level").strip
     end
 
-    def set_performance_level(profile_name = "auto")
+    def set_performance_level(profile_name = 'auto')
       sudo_write "#{base_card_dir}/power_dpm_force_performance_level", profile_name
     end
 

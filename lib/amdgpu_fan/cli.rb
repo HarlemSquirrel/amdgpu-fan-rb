@@ -27,19 +27,21 @@ module AmdgpuFan
 
     desc 'power_mode_auto', 'Set the power profile to automatic mode.'
     def power_mode_auto
-      amdgpu_service.set_performance_level("auto")
+      amdgpu_service.set_performance_level('auto')
       puts oneline_power_mode
     end
 
-    desc 'power_mode_low', 'Set the performance level to low to force the clocks to the lowest power state.'
+    desc 'power_mode_low',
+         'Set the performance level to low to force the clocks to the lowest power state.'
     def power_mode_low
-      amdgpu_service.set_performance_level("low")
+      amdgpu_service.set_performance_level('low')
       puts oneline_power_mode
     end
 
-    desc 'power_mode_high', 'Set the performance level to low to force the clocks to the highest power state.'
+    desc 'power_mode_high',
+         'Set the performance level to low to force the clocks to the highest power state.'
     def power_mode_high
-      amdgpu_service.set_performance_level("high")
+      amdgpu_service.set_performance_level('high')
       puts oneline_power_mode
     end
 
@@ -48,7 +50,8 @@ module AmdgpuFan
       puts amdgpu_service.profile_summary
     end
 
-    desc 'profile_force PROFILE_NUM', 'Set performance mode to manual and set a power profile. (requires sudo)'
+    desc 'profile_force PROFILE_NUM',
+         'Set performance mode to manual and set a power profile. (requires sudo)'
     def profile_force(state)
       amdgpu_service.profile_force = state
       puts amdgpu_service.profile_summary
