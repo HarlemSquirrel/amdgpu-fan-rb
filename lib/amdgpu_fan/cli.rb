@@ -77,19 +77,22 @@ module AmdgpuFan
     desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
     def status(option = nil)
       puts radeon_logo if option == '--logo'
-      puts ICONS[:gpu] + ' GPU:'.ljust(11) + amdgpu_service.name
-      puts ICONS[:vbios] + ' vBIOS:'.ljust(11) + amdgpu_service.vbios_version
-      puts "#{ICONS[:display]} Displays: #{amdgpu_service.display_names.join(', ')}"
-      puts ICONS[:clock] + ' Clocks:'.ljust(11) + clock_status
-      puts ICONS[:memory] + ' Memory:'.ljust(11) + mem_total_mibibyes
-      puts ICONS[:fan] + ' Fan:'.ljust(11) + fan_status
-      puts ICONS[:temp] + ' Temp:'.ljust(11) + "#{amdgpu_service.temperature}°C"
-      puts ICONS[:power] + ' Power:'.ljust(11) +
-           "#{amdgpu_service.profile_mode} profile in " \
-           "#{amdgpu_service.performance_level} mode using " \
-           "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts " \
-           "(#{amdgpu_service.power_draw_percent}%)"
-      puts ICONS[:load] + ' Load:'.ljust(11) + percent_meter(amdgpu_service.busy_percent, 12)
+      amdgpu_services.each_with_index do |amdgpu_service, index|
+        puts "\n=== Card #{index} ===\n" if amdgpu_services.size
+        puts ICONS[:gpu] + ' GPU:'.ljust(11) + amdgpu_service.name
+        puts ICONS[:vbios] + ' vBIOS:'.ljust(11) + amdgpu_service.vbios_version
+        puts "#{ICONS[:display]} Displays: #{amdgpu_service.display_names.join(', ')}"
+        puts ICONS[:clock] + ' Clocks:'.ljust(11) + clock_status(amdgpu_service)
+        puts ICONS[:memory] + ' Memory:'.ljust(11) + mem_total_mibibyes(amdgpu_service)
+        puts ICONS[:fan] + ' Fan:'.ljust(11) + fan_status(amdgpu_service)
+        puts ICONS[:temp] + ' Temp:'.ljust(11) + "#{amdgpu_service.temperature}°C"
+        puts ICONS[:power] + ' Power:'.ljust(11) +
+             "#{amdgpu_service.profile_mode} profile in " \
+             "#{amdgpu_service.performance_level} mode using " \
+             "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts " \
+             "(#{amdgpu_service.power_draw_percent}%)"
+        puts ICONS[:load] + ' Load:'.ljust(11) + percent_meter(amdgpu_service.busy_percent, 12)
+      end
     end
 
     desc 'version', 'Print the application version.'
@@ -184,21 +187,23 @@ module AmdgpuFan
 
     private
 
-    def amdgpu_service
+    def amdgpu_services
       # Right now we're only looking at the first card.
-      @amdgpu_service ||= AmdgpuFan::Service.new
+      @amdgpu_services ||= AmdgpuFan::Service.card_numbers.map { |card_num| AmdgpuFan::Service.new(card_num: card_num) }
     end
 
-    def clock_status
+    def clock_status(amdgpu_service)
       "#{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
     end
 
-    def fan_status
+    def fan_status(amdgpu_service)
+      return 'no fan' unless amdgpu_service.fan_present?
+
       "#{amdgpu_service.fan_mode} mode running at " \
         "#{amdgpu_service.fan_speed_rpm} rpm (#{amdgpu_service.fan_speed_percent}%)"
     end
 
-    def mem_total_mibibyes
+    def mem_total_mibibyes(amdgpu_service)
       "#{amdgpu_service.memory_total / (2**20)} MiB"
     end
 

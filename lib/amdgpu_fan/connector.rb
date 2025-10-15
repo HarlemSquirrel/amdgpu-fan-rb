@@ -22,7 +22,7 @@ module AmdgpuFan
           Connector.new card_num:,
                         dir_path:,
                         index: dir_path[-1],
-                        type: dir_path.slice(/(?<=card#{card_num}-)[A-z]+/)
+                        type: dir_path.slice(/(?<=card#{card_num}-)[A-Za-z]+/)
         end
       end
     end
