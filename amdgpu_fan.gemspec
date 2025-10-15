@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.2.0'
 
   s.add_dependency 'async', '~> 2.0'
+  s.add_dependency 'openssl', '~> 3.0'
   s.add_dependency 'thor', '~> 1.2'
 
   s.metadata = {
