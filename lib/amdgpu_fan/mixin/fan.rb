@@ -4,6 +4,10 @@ module AmdgpuFan
   ##
   # A mixin to read fan details and validate input
   module Fan
+    def fan_present?
+      File.exist?(fan_power_file)
+    end
+
     private
 
     def fan_file(type)
@@ -21,11 +25,15 @@ module AmdgpuFan
 
     def fan_speed_raw
       File.read(fan_power_file).strip
+      # rescue Errno::ENOENT
+      #   0
     end
 
     def fan_raw_speeds(type)
       @fan_raw_speeds ||= {}
       @fan_raw_speeds[type] ||= File.read(Dir.glob("#{base_card_dir}/**/pwm1_#{type}").first).to_i
+      # rescue TypeError
+      #   @fan_raw_speeds[type] ||= 0
     end
 
     ##

@@ -47,13 +47,19 @@ module AmdgpuFan
     end
 
     def fan_mode
+      return 'no fan' unless fan_present?
+
       FAN_MODES[File.read(fan_mode_file).strip] || 'unknown'
+      # rescue Errno::ENOENT
+      #   'no fan'
     end
 
     ##
     # Set the fan mode to auto or manual.
     #
     def fan_mode=(mode)
+      raise 'No fan' unless fan_present?
+
       sudo_write fan_mode_file, FAN_MODES.key(mode.to_s)
     end
 
@@ -61,6 +67,8 @@ module AmdgpuFan
     # Set the fan speed to a percentage if <= 100 or a raw value
     #
     def fan_speed=(value)
+      raise 'No fan' unless fan_present?
+
       if valid_fan_percent_speed?(value)
         new_raw = (value.to_f / 100 * fan_raw_speeds(:max).to_i).round
       elsif valid_fan_raw_speed?(value)
@@ -76,6 +84,8 @@ module AmdgpuFan
 
     def fan_speed_percent
       (fan_speed_raw.to_f / fan_raw_speeds(:max).to_i * 100).round
+    rescue FloatDomainError
+      'no fan'
     end
 
     ##
@@ -83,6 +93,8 @@ module AmdgpuFan
     #
     def fan_speed_rpm
       File.read(fan_file(:input)).strip.to_i
+    rescue Errno::ENOENT
+      'no fan'
     end
 
     ##
@@ -119,15 +131,21 @@ module AmdgpuFan
     end
 
     def power_draw
+      return Float::NAN if power_avg_file.nil?
+
       power_raw_to_watts File.read(power_avg_file)
     end
 
     def power_draw_percent
       (power_draw.to_f / power_max.to_i * 100).round
+    rescue FloatDomainError
+      Float::NAN
     end
 
     def power_max
       @power_max ||= power_raw_to_watts File.read("#{base_hwmon_dir}/power1_cap")
+    rescue Errno::ENOENT
+      Float::NAN
     end
 
     # https://dri.freedesktop.org/docs/drm/gpu/amdgpu.html#power-dpm-force-performance-level
@@ -146,6 +164,8 @@ module AmdgpuFan
 
     def profile_mode
       File.read("#{base_card_dir}/pp_power_profile_mode").slice(/\w+\s*+\*/).delete('*').strip
+    rescue Errno::ENOENT
+      'unknown'
     end
 
     def profile_summary
