@@ -6,7 +6,7 @@ module AmdgpuFan
     private
 
     ##
-    # Write to a system file with elevated priviledges.
+    # Write to a system file with elevated privileges.
     def sudo_write(file_path, value)
       `echo "#{value}" | sudo tee #{file_path}`
     end

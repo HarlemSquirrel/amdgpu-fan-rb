@@ -19,66 +19,81 @@ module AmdgpuFan
 
     desc 'connectors', 'View the status of the display connectors.'
     def connectors
-      amdgpu_service.connectors.each do |connector|
-        puts "#{connector.type} #{connector.index}:\t" +
-             (connector.connected? ? connector.display_name : connector.status)
+      with_services do |amdgpu_service|
+        amdgpu_service.connectors.each do |connector|
+          puts "#{connector.type} #{connector.index}:\t" +
+               (connector.connected? ? connector.display_name : connector.status)
+        end
       end
     end
 
     desc 'power_mode_auto', 'Set the power profile to automatic mode.'
     def power_mode_auto
-      amdgpu_service.set_performance_level('auto')
-      puts oneline_power_mode
+      with_services do |amdgpu_service|
+        amdgpu_service.set_performance_level('auto')
+        puts oneline_power_mode(amdgpu_service)
+      end
     end
 
     desc 'power_mode_low',
          'Set the performance level to low to force the clocks to the lowest power state.'
     def power_mode_low
-      amdgpu_service.set_performance_level('low')
-      puts oneline_power_mode
+      with_services do |amdgpu_service|
+        amdgpu_service.set_performance_level('low')
+        puts oneline_power_mode(amdgpu_service)
+      end
     end
 
     desc 'power_mode_high',
          'Set the performance level to low to force the clocks to the highest power state.'
     def power_mode_high
-      amdgpu_service.set_performance_level('high')
-      puts oneline_power_mode
+      with_services do |amdgpu_service|
+        amdgpu_service.set_performance_level('high')
+        puts oneline_power_mode(amdgpu_service)
+      end
     end
 
     desc 'profile', 'View power profile details.'
     def profile
-      puts amdgpu_service.profile_summary
+      with_services do |amdgpu_service|
+        puts amdgpu_service.profile_summary
+      end
     end
 
     desc 'profile_force PROFILE_NUM',
          'Set performance mode to manual and set a power profile. (requires sudo)'
     def profile_force(state)
-      amdgpu_service.profile_force = state
-      puts amdgpu_service.profile_summary
+      with_services do |amdgpu_service|
+        amdgpu_service.profile_force = state
+        puts amdgpu_service.profile_summary
+      end
     end
 
     desc 'fan', 'View fan details.'
     def fan
-      puts fan_status
+      with_services do |amdgpu_service|
+        puts fan_status(amdgpu_service)
+      end
     end
 
     desc 'fan_set PERCENTAGE/AUTO', 'Set fan speed to percentage or automatic mode. (requires sudo)'
     def fan_set(value)
-      if value.strip.casecmp('auto').zero?
-        amdgpu_service.fan_mode = :auto
-      else
-        return puts 'Invalid percentage' unless (0..100).cover?(value.to_i)
+      with_services do |amdgpu_service|
+        if value.strip.casecmp('auto').zero?
+          amdgpu_service.fan_mode = :auto
+        else
+          return puts 'Invalid percentage' unless (0..100).cover?(value.to_i)
 
-        amdgpu_service.fan_speed = value
+          amdgpu_service.fan_speed = value
+        end
+        puts fan_status(amdgpu_service)
       end
-      puts fan_status
     end
 
     desc 'status [--logo]', 'View device info, current fan speed, and temperature.'
     def status(option = nil)
       puts radeon_logo if option == '--logo'
-      amdgpu_services.each_with_index do |amdgpu_service, index|
-        puts "\n=== Card #{index} ===\n" if amdgpu_services.size
+      with_services do |amdgpu_service|
         puts ICONS[:gpu] + ' GPU:'.ljust(11) + amdgpu_service.name
         puts ICONS[:vbios] + ' vBIOS:'.ljust(11) + amdgpu_service.vbios_version
         puts "#{ICONS[:display]} Displays: #{amdgpu_service.display_names.join(', ')}"
@@ -100,10 +115,13 @@ module AmdgpuFan
       puts AmdgpuFan::VERSION
     end
 
-    desc 'watch [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
-                            'refreshed every n seconds.'
-    def watch(seconds = 1)
+    desc 'watch GPU [SECONDS]', 'Watch fan speed, load, power, and temperature ' \
+                                'refreshed every n seconds.'
+    def watch(gpu, seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
+
+      amdgpu_service = amdgpu_services[gpu.to_i]
+      return puts "GPU #{gpu} not found." if amdgpu_service.nil?
 
       puts "Watching #{amdgpu_service.name} every #{seconds} second(s)...",
            '  <Press Ctrl-C to exit>'
@@ -115,8 +133,8 @@ module AmdgpuFan
 
       loop do
         time = Time.now
-        puts [time.strftime('%F %T'), summary_clock, summary_fan, summary_load, summary_power,
-              summary_temp].join(WATCH_FIELD_SEPARATOR)
+        puts [time.strftime('%F %T'), summary_clock(amdgpu_service), summary_fan(amdgpu_service), summary_load(amdgpu_service), summary_power(amdgpu_service),
+              summary_temp(amdgpu_service)].join(WATCH_FIELD_SEPARATOR)
 
         # It can take a second or two to run the above so we remove them from the wait
         # here to get a more consistant watch interval.
@@ -192,6 +210,13 @@ module AmdgpuFan
       @amdgpu_services ||= AmdgpuFan::Service.card_numbers.map { |card_num| AmdgpuFan::Service.new(card_num: card_num) }
     end
 
+    def with_services
+      amdgpu_services.each_with_index do |amdgpu_service, index|
+        puts "\n=== GPU #{index} ===\n" if amdgpu_services.size
+        yield amdgpu_service
+      end
+    end
+
     def clock_status(amdgpu_service)
       "#{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
     end
@@ -207,36 +232,39 @@ module AmdgpuFan
       "#{amdgpu_service.memory_total / (2**20)} MiB"
     end
 
-    def power_max
+    def power_max(amdgpu_service)
       format('%<num>0.2f', num: amdgpu_service.power_max)
     end
 
-    def oneline_power_mode
+    def oneline_power_mode(amdgpu_service)
       "--> #{ICONS[:power]} #{amdgpu_service.performance_level} mode using " \
         "#{amdgpu_service.power_draw} / #{amdgpu_service.power_max} Watts " \
         "(#{amdgpu_service.power_draw_percent}%)"
     end
 
-    def summary_clock
+    def summary_clock(amdgpu_service)
       "Core: #{amdgpu_service.core_clock.to_s.rjust(7)}#{WATCH_FIELD_SEPARATOR}" \
         "Memory: #{amdgpu_service.memory_clock.to_s.rjust(7)}"
     end
 
-    def summary_fan
+    def summary_fan(amdgpu_service)
+      return 'Fan: no fan' unless amdgpu_service.fan_present?
+
       fan_speed_string = "#{amdgpu_service.fan_speed_rpm} rpm".rjust(8)
       "Fan: #{fan_speed_string} #{percent_meter(amdgpu_service.fan_speed_percent)}"
     end
 
-    def summary_load
+    def summary_load(amdgpu_service)
       "Load: #{percent_meter amdgpu_service.busy_percent}"
     end
 
-    def summary_power
-      "Power: #{format('%<num>0.02f', num: amdgpu_service.power_draw).rjust(power_max.length)} W " \
+    def summary_power(amdgpu_service)
+      "Power: #{format('%<num>0.02f',
+                       num: amdgpu_service.power_draw).rjust(power_max(amdgpu_service).length)} W " \
         "#{percent_meter amdgpu_service.power_draw_percent}"
     end
 
-    def summary_temp
+    def summary_temp(amdgpu_service)
       temp_string = "#{amdgpu_service.temperature}°C".rjust(7)
       "Temp: #{temp_string}"
     end
