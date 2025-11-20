@@ -143,11 +143,12 @@ module AmdgpuFan
       end
     end
 
-    desc 'watch_avg',
+    desc 'watch_avg GPU',
          <<~DOC
            Watch min, max, average, and current stats.
          DOC
-    def watch_avg
+    def watch_avg(gpu)
+      amdgpu_service = amdgpu_services[gpu.to_i]
       puts "Watching #{amdgpu_service.name} min, max and averges since #{Time.now}...",
            '  <Press Ctrl-C to exit>',
            "\n\n\n\n\n"
@@ -218,7 +219,7 @@ module AmdgpuFan
     end
 
     def clock_status(amdgpu_service)
-      "#{amdgpu_service.core_clock} Core, #{amdgpu_service.memory_clock} Memory"
+      "#{amdgpu_service.core_clock} Mhz Core, #{amdgpu_service.memory_clock} Mhz Memory"
     end
 
     def fan_status(amdgpu_service)
