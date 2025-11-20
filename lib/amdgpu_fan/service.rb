@@ -47,6 +47,8 @@ module AmdgpuFan
     end
 
     def fan_mode
+      return 'no fan' unless fan_present?
+
       FAN_MODES[File.read(fan_mode_file).strip] || 'unknown'
     end
 
@@ -54,6 +56,8 @@ module AmdgpuFan
     # Set the fan mode to auto or manual.
     #
     def fan_mode=(mode)
+      return unless fan_present?
+
       sudo_write fan_mode_file, FAN_MODES.key(mode.to_s)
     end
 
@@ -61,6 +65,8 @@ module AmdgpuFan
     # Set the fan speed to a percentage if <= 100 or a raw value
     #
     def fan_speed=(value)
+      return unless fan_present?
+
       if valid_fan_percent_speed?(value)
         new_raw = (value.to_f / 100 * fan_raw_speeds(:max).to_i).round
       elsif valid_fan_raw_speed?(value)
@@ -76,6 +82,8 @@ module AmdgpuFan
 
     def fan_speed_percent
       (fan_speed_raw.to_f / fan_raw_speeds(:max).to_i * 100).round
+    rescue FloatDomainError
+      'no fan'
     end
 
     ##
@@ -83,6 +91,8 @@ module AmdgpuFan
     #
     def fan_speed_rpm
       File.read(fan_file(:input)).strip.to_i
+    rescue Errno::ENOENT
+      'no fan'
     end
 
     ##
@@ -118,16 +128,26 @@ module AmdgpuFan
       File.read("#{base_card_dir}/power_dpm_state").strip
     end
 
+    def power_draw_file
+      power_current_file || power_avg_file
+    end
+
     def power_draw
-      power_raw_to_watts File.read(power_avg_file)
+      return Float::NAN if power_draw_file.nil?
+
+      power_raw_to_watts File.read(power_draw_file)
     end
 
     def power_draw_percent
       (power_draw.to_f / power_max.to_i * 100).round
+    rescue FloatDomainError
+      Float::NAN
     end
 
     def power_max
       @power_max ||= power_raw_to_watts File.read("#{base_hwmon_dir}/power1_cap")
+    rescue Errno::ENOENT
+      Float::NAN
     end
 
     # https://dri.freedesktop.org/docs/drm/gpu/amdgpu.html#power-dpm-force-performance-level
@@ -136,20 +156,32 @@ module AmdgpuFan
     end
 
     def set_performance_level(profile_name = 'auto')
+      return 'unsupported' unless dpm_supported?
+
       sudo_write "#{base_card_dir}/power_dpm_force_performance_level", profile_name
     end
 
     def profile_force=(state)
+      return unless dpm_supported? && power_profiles_supported?
+
       sudo_write "#{base_card_dir}/power_dpm_force_performance_level", 'manual'
       sudo_write "#{base_card_dir}/pp_power_profile_mode", state
     end
 
     def profile_mode
+      return 'unsupported' unless power_profiles_supported?
+
       File.read("#{base_card_dir}/pp_power_profile_mode").slice(/\w+\s*+\*/).delete('*').strip
+      # rescue Errno::ENOENT
+      #   'unknown'
     end
 
     def profile_summary
+      return 'unsupported' unless power_profiles_supported?
+
       File.read("#{base_card_dir}/pp_power_profile_mode")
+      # rescue Errno::ENOENT
+      #   'unsupported'
     end
 
     def temperature
@@ -178,12 +210,35 @@ module AmdgpuFan
       @device_id ||= File.read(File.join(base_card_dir, 'device')).to_i(16)
     end
 
+    def dpm_supported?
+      File.exist?("#{base_card_dir}/power_dpm_force_performance_level")
+    end
+
+    def power_profiles_supported?
+      File.exist?("#{base_card_dir}/pp_power_profile_mode")
+    end
+
+    ##
+    # File that contains average power used by the SoC in microWatts.
+    # On APUs this includes the CPU.
+    #
     def power_avg_file
       @power_avg_file ||= Dir.glob("#{base_card_dir}/**/power1_average").first
     end
 
+    ##
+    # File that contains instantaneous power used by the SoC in microWatts.
+    # On APUs this includes the CPU.
+    #
+    def power_current_file
+      @power_current_file ||= Dir.glob("#{base_card_dir}/**/power1_input").first
+    end
+
+    ##
+    # Convert raw power value in microWatts to Watts.
+    #
     def power_raw_to_watts(raw_string)
-      (raw_string.strip.to_f / 1_000_000).round(2)
+      (raw_string.strip.to_f / 1_000_000).round(4)
     end
 
     def subdevice_id
