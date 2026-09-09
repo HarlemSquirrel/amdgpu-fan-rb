@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "amdgpu"
-    ]
+    ],
+    "chat.tools.terminal.autoApprove": {
+        "bundle": true
+    }
 }
