@@ -24,6 +24,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'thor', '~> 1.2'
 
   s.metadata = {
+    'changelog_uri' => 'https://github.com/HarlemSquirrel/amdgpu-fan-rb/releases',
+    'source_code_uri' => 'https://github.com/HarlemSquirrel/amdgpu-fan-rb',
     'rubygems_mfa_required' => 'true'
   }
 end

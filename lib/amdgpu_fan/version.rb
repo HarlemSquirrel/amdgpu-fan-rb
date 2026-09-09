@@ -2,5 +2,5 @@
 
 module AmdgpuFan
   # Current version of RSpec Core, in semantic versioning format.
-  VERSION = '1.0.0'
+  VERSION = '1.0.1'
 end
