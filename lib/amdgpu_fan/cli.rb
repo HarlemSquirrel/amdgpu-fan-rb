@@ -102,6 +102,8 @@ module AmdgpuFan
     def watch(seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
 
+      $stdout.sync = true
+
       puts "Watching #{amdgpu_service.name} every #{seconds} second(s)...",
            '  <Press Ctrl-C to exit>'
 
@@ -127,6 +129,8 @@ module AmdgpuFan
            Watch min, max, average, and current stats.
          DOC
     def watch_avg
+      $stdout.sync = true
+
       puts "Watching #{amdgpu_service.name} min, max and averges since #{Time.now}...",
            '  <Press Ctrl-C to exit>',
            "\n\n\n\n\n"
@@ -156,6 +160,8 @@ module AmdgpuFan
                                 'refreshed every n seconds defaulting to 1 second.'
     def watch_csv(seconds = 1)
       return puts 'Seconds must be from 1 to 600' unless (1..600).cover?(seconds.to_i)
+
+      $stdout.sync = true
 
       puts 'Timestamp,Core Clock (Mhz),Memory Clock (Mhz),Fan speed (rpm),' \
            'Load (%),Power (Watts),Temp (°C)'
