@@ -110,6 +110,16 @@ RSpec.describe AmdgpuFan::Service do
     end
 
     it { expect(amdgpu_service.power_draw).to eq 52.21 }
+
+    context 'when power1_average is unavailable' do
+      let(:file_name) { 'power1_input' }
+
+      before do
+        FileUtils.rm_f "#{file_dir}/power1_average"
+      end
+
+      it { expect(amdgpu_service.power_draw).to eq 52.21 }
+    end
   end
 
   describe '#power_draw_percent' do
