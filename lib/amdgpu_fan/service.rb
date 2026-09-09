@@ -83,6 +83,8 @@ module AmdgpuFan
     #
     def fan_speed_rpm
       File.read(fan_file(:input)).strip.to_i
+    rescue Errno::EINVAL
+      0  # no tach reading — fan off or sensor absent
     end
 
     ##
