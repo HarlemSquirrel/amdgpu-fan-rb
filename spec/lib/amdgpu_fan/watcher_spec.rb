@@ -31,6 +31,8 @@ RSpec.describe AmdgpuFan::Watcher do
     File.write File.join(file_dir, 'hwmon/hwmon0/fan1_input'), 1207
     File.write File.join(file_dir, 'hwmon/hwmon0/power1_average'), 8_000_000
     File.write File.join(file_dir, 'hwmon/hwmon0/temp1_input'), 25_000
+
+    File.write File.join(file_dir, 'gpu_busy_percent'), 42
   end
 
   describe '#measure' do

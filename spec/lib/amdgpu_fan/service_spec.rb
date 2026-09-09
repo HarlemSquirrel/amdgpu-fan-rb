@@ -146,7 +146,7 @@ RSpec.describe AmdgpuFan::Service do
 
     before do
       FileUtils.mkdir_p file_dir
-      FileUtils.touch(file_path)
+      File.write(file_path, '')
       stub_sudo_write(file_path, expected_val)
     end
 

@@ -54,7 +54,7 @@ module AmdgpuFan
     # Set the fan mode to auto or manual.
     #
     def fan_mode=(mode)
-      sudo_write fan_mode_file, FAN_MODES.key(mode.to_s)
+      sudo_write fan_mode_file, FAN_MODES.invert[mode.to_s]
     end
 
     ##
