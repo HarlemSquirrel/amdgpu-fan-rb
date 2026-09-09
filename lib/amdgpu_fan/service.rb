@@ -121,7 +121,7 @@ module AmdgpuFan
     end
 
     def power_draw
-      power_raw_to_watts File.read(power_avg_file)
+      power_raw_to_watts File.read(power_file)
     end
 
     def power_draw_percent
@@ -180,8 +180,9 @@ module AmdgpuFan
       @device_id ||= File.read(File.join(base_card_dir, 'device')).to_i(16)
     end
 
-    def power_avg_file
-      @power_avg_file ||= Dir.glob("#{base_card_dir}/**/power1_average").first
+    def power_file
+      @power_file ||= Dir.glob("#{base_card_dir}/**/power1_average").first ||
+                      Dir.glob("#{base_card_dir}/**/power1_input").first
     end
 
     def power_raw_to_watts(raw_string)
